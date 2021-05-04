@@ -19,9 +19,10 @@ class CustomTextField extends StatelessWidget {
         obscureText: isObsecure,
         cursorColor: Theme.of(context).primaryColor,
         decoration: InputDecoration(
-            prefixIcon: Icon(data, color: Theme.of(context).primaryColor),
-            focusColor: Theme.of(context).primaryColor,
-            hintText: hintText),
+          prefixIcon: Icon(data, color: Theme.of(context).primaryColor),
+          focusColor: Theme.of(context).primaryColor,
+          hintText: hintText,
+        ),
       ),
     );
   }
