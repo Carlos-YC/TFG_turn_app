@@ -1,0 +1,85 @@
+{
+  "project_info": {
+    "project_number": "853923328659",
+    "firebase_url": "https://supermarket-ticket-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "supermarket-ticket",
+    "storage_bucket": "supermarket-ticket.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:853923328659:android:40005efbb857ba12b7d366",
+        "android_client_info": {
+          "package_name": "com.supermarket_turn_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "853923328659-itc91t024f5860h4uaok5hno4scd1j64.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.supermarket_turn_app",
+            "certificate_hash": "9d5307c407b48b10e0711bd25a412f4a2fb500dc"
+          }
+        },
+        {
+          "client_id": "853923328659-eouk8s918br8f0172onk5h483745mdof.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD1hggJkXw_BFKDAkm-iTXJmPIj8nPVWrk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "853923328659-eouk8s918br8f0172onk5h483745mdof.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:853923328659:android:e0c8cbbe93839340b7d366",
+        "android_client_info": {
+          "package_name": "com.tfg_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "853923328659-kcgjbj2j2mpten7tgo6at09sh9rpp95j.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tfg_app",
+            "certificate_hash": "9d5307c407b48b10e0711bd25a412f4a2fb500dc"
+          }
+        },
+        {
+          "client_id": "853923328659-eouk8s918br8f0172onk5h483745mdof.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD1hggJkXw_BFKDAkm-iTXJmPIj8nPVWrk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "853923328659-eouk8s918br8f0172onk5h483745mdof.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
