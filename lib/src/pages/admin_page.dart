@@ -90,10 +90,7 @@ class AdminPage extends StatelessWidget {
               ],
             ),
             child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [_textShow(text)],
-              ),
+              child: _textShow(text),
             ),
           ),
         ),
