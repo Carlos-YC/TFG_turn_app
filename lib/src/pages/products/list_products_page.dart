@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+
 import 'package:tfg_app/src/providers/product_provider.dart';
+import 'package:tfg_app/src/dialog/display_dialog.dart';
 
 class ListProductsPage extends StatefulWidget {
   @override
@@ -76,7 +78,17 @@ class _ListProductsPageState extends State<ListProductsPage> {
         final cells = [product['nombre'], product['tipo'], product['disponible']];
         return DataRow(
           cells: _getCells(cells),
-        );
+            onSelectChanged: (bool selected) {
+              if (selected) {
+                if (product['disponible']) {
+                  DisplayDialog.displayAvailableDialog(
+                      context, '¿Cambiar -${product['nombre']}- a "NO DISPONIBLE"?', product['id'], true);
+                } else {
+                  DisplayDialog.displayAvailableDialog(
+                      context, '¿Cambiar -${product['nombre']}- a "DISPONIBLE"?', product['id'], false);
+                }
+              }
+            });
       }).toList();
 
   List<DataCell> _getCells(List cells) => cells.map((data) => DataCell(Text('$data'))).toList();

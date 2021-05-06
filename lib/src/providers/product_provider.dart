@@ -17,4 +17,12 @@ class ProductProvider {
     });
     return _list;
   }
+
+  void updateAvailable(String id, bool available) async {
+    if (available) {
+      await _productReference.child(id).update({'disponible': false});
+    } else {
+      await _productReference.child(id).update({'disponible': true});
+    }
+  }
 }
