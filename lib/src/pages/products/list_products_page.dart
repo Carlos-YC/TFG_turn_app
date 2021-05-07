@@ -10,6 +10,8 @@ class ListProductsPage extends StatefulWidget {
 
 class _ListProductsPageState extends State<ListProductsPage> {
   List products;
+  int sortColumnIndex;
+  bool isAscending = false;
 
   @override
   Widget build(BuildContext context) {
@@ -66,13 +68,15 @@ class _ListProductsPageState extends State<ListProductsPage> {
 
     return DataTable(
       showCheckboxColumn: false,
+      sortAscending: isAscending,
+      sortColumnIndex: sortColumnIndex,
       columns: _getColumns(columns, snapshot),
       rows: _getRows(snapshot),
     );
   }
 
   List<DataColumn> _getColumns(List<String> columns, AsyncSnapshot snapshot) =>
-      columns.map((String column) => DataColumn(label: Text(column))).toList();
+      columns.map((String column) => DataColumn(label: Text(column), onSort: _onSort)).toList();
 
   List<DataRow> _getRows(AsyncSnapshot products) => products.data.map<DataRow>((product) {
         final cells = [product['nombre'], product['tipo'], product['disponible']];
@@ -92,4 +96,24 @@ class _ListProductsPageState extends State<ListProductsPage> {
       }).toList();
 
   List<DataCell> _getCells(List cells) => cells.map((data) => DataCell(Text('$data'))).toList();
+
+  void _onSort(int columnIndex, bool ascending) {
+    if (columnIndex == 0) {
+      products.sort((product1, product2) =>
+          _compareString(ascending, product1['nombre'], product2['nombre']));
+    } else if (columnIndex == 1) {
+      products.sort((product1, product2) =>
+          _compareString(ascending, '${product1['tipo']}', '${product2['tipo']}'));
+    } else if (columnIndex == 2) {
+      products.sort((product1, product2) =>
+          _compareString(ascending, '${product1['disponible']}', '${product2['disponible']}'));
+    }
+    setState(() {
+      this.sortColumnIndex = columnIndex;
+      this.isAscending = ascending;
+    });
+  }
+
+  int _compareString(bool ascending, String product1, String product2) =>
+      ascending ? product1.compareTo(product2) : product2.compareTo(product1);
 }

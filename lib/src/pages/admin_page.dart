@@ -4,7 +4,6 @@ import 'package:tfg_app/src/providers/user_provider.dart';
 class AdminPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -28,15 +27,13 @@ class AdminPage extends StatelessWidget {
             )
           ],
         ),
-        body: _adminScreen(context, size),
+        body: _adminScreen(context),
       ),
     );
   }
 
-  Widget _adminScreen(BuildContext context, Size size) {
+  Widget _adminScreen(BuildContext context) {
     return Container(
-      width: size.width * 1,
-      height: size.height * 1,
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [Colors.blue, Colors.greenAccent],
@@ -55,7 +52,7 @@ class AdminPage extends StatelessWidget {
   }
 
   Widget _turns(BuildContext context) {
-    String _text = 'Pedidos';
+    String _text = 'Ver turnos';
     String _route = 'adminTurn';
 
     return _boxButton(context, _text, _route);
