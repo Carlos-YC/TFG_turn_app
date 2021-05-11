@@ -51,7 +51,6 @@ class _ListProductsPageState extends State<ListProductsPage> {
           child: FutureBuilder(
             future: ProductProvider().getAllProducts(),
             builder: (context, snapshot) {
-              //if (snapshot.connectionState != ConnectionState.done) print('Error conexión');
               if (snapshot.hasError) print('Error');
               if (!snapshot.hasData) return CircularProgressIndicator();
               products = snapshot.data;

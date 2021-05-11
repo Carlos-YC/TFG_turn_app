@@ -10,8 +10,8 @@ class SupermarketApp {
   static FirebaseAuth auth;
   static FirebaseDatabase database;
 
-  static String collectionUser = "users";
-  static String collectionOrders = "orders";
+  static String collectionUser = 'users';
+  static String collectionOrders = 'orders';
   static String userCartList = 'userCart';
 
   static final String userEmail = 'email';

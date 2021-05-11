@@ -97,10 +97,12 @@ class AdminPage extends StatelessWidget {
 
   Widget _textShow(String text) {
     return FittedBox(
-        child: Text(text,
-            textAlign: TextAlign.center,
-            overflow: TextOverflow.ellipsis,
-            style:
-                TextStyle(fontWeight: FontWeight.bold, fontSize: 48.0, color: Color(0xFF3f4756))));
+      child: Text(
+        text,
+        textAlign: TextAlign.center,
+        overflow: TextOverflow.ellipsis,
+        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 48.0, color: Color(0xFF3f4756)),
+      ),
+    );
   }
 }

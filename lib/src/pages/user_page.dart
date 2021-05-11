@@ -1,6 +1,8 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
 import 'package:tfg_app/src/config/config.dart';
+import 'package:tfg_app/src/providers/turn_provider.dart';
 import 'package:tfg_app/src/providers/user_provider.dart';
 
 class UserPage extends StatelessWidget {
@@ -56,9 +58,15 @@ class UserPage extends StatelessWidget {
   }
 
   Widget _takeTurn(BuildContext context) {
-    String _text = 'Pedir turno';
+    bool _hasTurn = false; // Solo durante las pruebas
+    String _text;
     String _route = 'userTurn';
-
+    if (!_hasTurn) {
+      _text = 'Pedir turno';
+      _route = '';
+    } else {
+      _text = 'Ver turno';
+    }
     return _boxButton(context, _text, _route);
   }
 
@@ -74,10 +82,11 @@ class UserPage extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.all(15.0),
         child: InkWell(
-          onTap: () => Navigator.pushNamed(context, route),
+          onTap: () =>
+              (route == '') ? _readQR(context, 'userTurn') : Navigator.pushNamed(context, route),
           child: Container(
             margin: EdgeInsets.symmetric(vertical: 10.0),
-            padding: EdgeInsets.symmetric(vertical: 50.0),
+            padding: EdgeInsets.all(20.0),
             decoration: BoxDecoration(
               color: Color(0xFF97f48a),
               borderRadius: BorderRadius.circular(7.0),
@@ -100,13 +109,18 @@ class UserPage extends StatelessWidget {
   }
 
   Widget _textShow(String text) {
-    return FittedBox(
-      child: Text(
-        text,
-        textAlign: TextAlign.center,
-        overflow: TextOverflow.ellipsis,
-        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 48.0, color: Color(0xFF3f4756)),
-      ),
+    return AutoSizeText(
+      text,
+      textAlign: TextAlign.center,
+      style: TextStyle(fontSize: 58, fontWeight: FontWeight.bold, color: Color(0xFF3f4756)),
+      maxLines: 1,
     );
+  }
+
+  Future<void> _readQR(BuildContext context, String route) async {
+    bool _isScanDB = await TurnProvider().readQR();
+    if (_isScanDB) {
+      Navigator.pushNamed(context, route);
+    }
   }
 }
