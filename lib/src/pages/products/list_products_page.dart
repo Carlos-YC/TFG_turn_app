@@ -15,7 +15,6 @@ class _ListProductsPageState extends State<ListProductsPage> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size; // Para que sea adaptativo
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -35,16 +34,14 @@ class _ListProductsPageState extends State<ListProductsPage> {
             style: TextStyle(color: Colors.white, fontSize: 24.0),
           ),
         ),
-        body: _productsTable(context, size),
+        body: _productsTable(context),
         backgroundColor: Colors.blue,
       ),
     );
   }
 
-  Widget _productsTable(BuildContext context, Size size) {
+  Widget _productsTable(BuildContext context) {
     return Container(
-      width: size.width * 1,
-      height: size.height * 1,
       child: Padding(
         padding: EdgeInsets.all(10.0),
         child: SingleChildScrollView(
