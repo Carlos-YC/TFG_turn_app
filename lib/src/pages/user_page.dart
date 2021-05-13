@@ -8,33 +8,31 @@ import 'package:tfg_app/src/providers/user_provider.dart';
 class UserPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          flexibleSpace: Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Colors.green, Colors.lightGreen],
-                begin: FractionalOffset(0.0, 0.0),
-                end: FractionalOffset(1.0, 0.0),
-                stops: [0.0, 1.0],
-                tileMode: TileMode.clamp,
-              ),
+    return Scaffold(
+      appBar: AppBar(
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.green, Colors.lightGreen],
+              begin: FractionalOffset(0.0, 0.0),
+              end: FractionalOffset(1.0, 0.0),
+              stops: [0.0, 1.0],
+              tileMode: TileMode.clamp,
             ),
           ),
-          title: Text(
-            SupermarketApp.sharedPreferences.getString(SupermarketApp.userEmail),
-            style: TextStyle(color: Colors.white, fontSize: 24.0),
-          ),
-          actions: [
-            IconButton(
-              icon: Icon(Icons.logout),
-              onPressed: () => UserProvider().logOut(context),
-            )
-          ],
         ),
-        body: _userScreen(context),
+        title: Text(
+          SupermarketApp.sharedPreferences.getString(SupermarketApp.userEmail),
+          style: TextStyle(color: Colors.white, fontSize: 24.0),
+        ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.logout),
+            onPressed: () => UserProvider().logOut(context),
+          )
+        ],
       ),
+      body: _userScreen(context),
     );
   }
 
@@ -58,16 +56,23 @@ class UserPage extends StatelessWidget {
   }
 
   Widget _takeTurn(BuildContext context) {
-    bool _hasTurn = false; // Solo durante las pruebas
-    String _text;
-    String _route = 'userTurn';
-    if (!_hasTurn) {
-      _text = 'Pedir turno';
-      _route = '';
-    } else {
-      _text = 'Ver turno';
-    }
-    return _boxButton(context, _text, _route);
+    return FutureBuilder(
+      future: TurnProvider().hasTurn(),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) print('Error');
+        if (!snapshot.hasData) return CircularProgressIndicator();
+        bool hasTurn = snapshot.data;
+        String _text;
+        String _route = 'userTurn';
+        if (!hasTurn) {
+          _text = 'Pedir turno';
+          _route = '';
+        } else {
+          _text = 'Ver turno';
+        }
+        return _boxButton(context, _text, _route);
+      },
+    );
   }
 
   Widget _products(BuildContext context) {

@@ -4,31 +4,29 @@ import 'package:tfg_app/src/providers/user_provider.dart';
 class AdminPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          flexibleSpace: Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Colors.blue, Colors.lightBlueAccent],
-                begin: FractionalOffset(0.0, 0.0),
-                end: FractionalOffset(1.0, 0.0),
-                stops: [0.0, 1.0],
-                tileMode: TileMode.clamp,
-              ),
+    return Scaffold(
+      appBar: AppBar(
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.blue, Colors.lightBlueAccent],
+              begin: FractionalOffset(0.0, 0.0),
+              end: FractionalOffset(1.0, 0.0),
+              stops: [0.0, 1.0],
+              tileMode: TileMode.clamp,
             ),
           ),
-          title: Text('Sesión de administrador',
-              style: TextStyle(color: Colors.white, fontSize: 24.0)),
-          actions: [
-            IconButton(
-              icon: Icon(Icons.logout),
-              onPressed: () => UserProvider().logOut(context),
-            )
-          ],
         ),
-        body: _adminScreen(context),
+        title:
+            Text('Sesión de administrador', style: TextStyle(color: Colors.white, fontSize: 24.0)),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.logout),
+            onPressed: () => UserProvider().logOut(context),
+          )
+        ],
       ),
+      body: _adminScreen(context),
     );
   }
 

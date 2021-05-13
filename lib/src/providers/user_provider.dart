@@ -106,9 +106,7 @@ class UserProvider {
         .child(SupermarketApp.auth.currentUser.uid)
         .once()
         .then((DataSnapshot snapshot) {
-      if (snapshot.value != null) {
-        admin = true;
-      }
+      if (snapshot.value != null) admin = true;
     });
     return admin;
   }

@@ -15,28 +15,26 @@ class _ListProductsPageState extends State<ListProductsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          flexibleSpace: Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Colors.blue, Colors.lightBlueAccent],
-                begin: FractionalOffset(0.0, 0.0),
-                end: FractionalOffset(1.0, 0.0),
-                stops: [0.0, 1.0],
-                tileMode: TileMode.clamp,
-              ),
+    return Scaffold(
+      appBar: AppBar(
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.blue, Colors.lightBlueAccent],
+              begin: FractionalOffset(0.0, 0.0),
+              end: FractionalOffset(1.0, 0.0),
+              stops: [0.0, 1.0],
+              tileMode: TileMode.clamp,
             ),
           ),
-          title: Text(
-            'Productos',
-            style: TextStyle(color: Colors.white, fontSize: 24.0),
-          ),
         ),
-        body: _productsTable(context),
-        backgroundColor: Colors.blue,
+        title: Text(
+          'Productos',
+          style: TextStyle(color: Colors.white, fontSize: 24.0),
+        ),
       ),
+      body: _productsTable(context),
+      backgroundColor: Colors.blue,
     );
   }
 
@@ -77,15 +75,23 @@ class _ListProductsPageState extends State<ListProductsPage> {
   List<DataRow> _getRows(AsyncSnapshot products) => products.data.map<DataRow>((product) {
         final cells = [product['nombre'], product['tipo'], product['disponible']];
         return DataRow(
-          cells: _getCells(cells),
+            cells: _getCells(cells),
             onSelectChanged: (bool selected) {
               if (selected) {
                 if (product['disponible']) {
                   DisplayDialog.displayAvailableDialog(
-                      context, '¿Cambiar -${product['nombre']}- a "NO DISPONIBLE"?', product['id'], true);
+                    context,
+                    '¿Cambiar -${product['nombre']}- a "NO DISPONIBLE"?',
+                    product['id'],
+                    true,
+                  );
                 } else {
                   DisplayDialog.displayAvailableDialog(
-                      context, '¿Cambiar -${product['nombre']}- a "DISPONIBLE"?', product['id'], false);
+                    context,
+                    '¿Cambiar -${product['nombre']}- a "DISPONIBLE"?',
+                    product['id'],
+                    false,
+                  );
                 }
               }
             });
