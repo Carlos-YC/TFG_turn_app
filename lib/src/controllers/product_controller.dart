@@ -29,17 +29,19 @@ class ListProductController extends GetxController {
     this.listener = _productsRealTimeDB.onValue.listen((event) {
       this.productList.clear();
       final _products = event.snapshot.value;
-      _products.forEach((key, value) {
-        this.productList.add(ProductModel.fromJson(jsonEncode(value)));
-      });
+      if (_products != null) {
+        _products.forEach((key, value) {
+          this.productList.add(ProductModel.fromJson(jsonEncode(value)));
+        });
+      }
     });
   }
 
-  void updateAvailable(String id, bool available) async {
+  void updateAvailable(String id, bool available) {
     if (available) {
-      await _productsRealTimeDB.child(id).update({'disponible': false});
+      _productsRealTimeDB.child(id).update({'disponible': false});
     } else {
-      await _productsRealTimeDB.child(id).update({'disponible': true});
+      _productsRealTimeDB.child(id).update({'disponible': true});
     }
   }
 }

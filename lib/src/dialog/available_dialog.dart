@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tfg_app/src/controllers/product_controller.dart';
 
 class AvailableAlertDialog extends StatelessWidget {
   final String message;
@@ -19,7 +20,7 @@ class AvailableAlertDialog extends StatelessWidget {
           ),
           style: ElevatedButton.styleFrom(primary: Colors.green),
           onPressed: () {
-            //ProductProvider().updateAvailable(id, available);
+            ListProductController().updateAvailable(id, available);
             Navigator.of(context).pop();
           },
         ),

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:tfg_app/src/controllers/product_controller.dart';
 
+import 'package:tfg_app/src/controllers/product_controller.dart';
 import 'package:tfg_app/src/models/product_model.dart';
+import 'package:tfg_app/src/dialog/display_dialog.dart';
 
 class ListProductsPage extends StatefulWidget {
   @override
@@ -44,29 +45,60 @@ class _ListProductsPageState extends State<ListProductsPage> {
     return Obx(() {
       if (controller.productList.length == 0) {
         return Center(
-          child: CircularProgressIndicator(),
+          child: Center(
+            child: Text('No hay productos',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24.0)),
+          ),
         );
       } else {
         this._products = controller.productList;
         final columns = ['Producto', 'Tipo', 'Disponible'];
-        return DataTable(
-          sortAscending: _isAscending,
-          sortColumnIndex: _sortColumnIndex,
-          columns: _getColumns(columns),
-          rows: _getRows(controller.productList),
+        return Container(
+          padding: EdgeInsets.all(5.0),
+          child: DataTable(
+            showCheckboxColumn: false,
+            sortAscending: _isAscending,
+            sortColumnIndex: _sortColumnIndex,
+            columns: _getColumns(columns),
+            rows: _getRows(controller.productList),
+          ),
         );
       }
     });
   }
 
-  List<DataColumn> _getColumns(List<String> columns) =>
-      columns.map((String column) => DataColumn(label: Text(column), onSort: _onSort)).toList();
+  List<DataColumn> _getColumns(List<String> columns) => columns
+      .map((String column) => DataColumn(
+            label: Text(
+              column,
+              style: TextStyle(fontSize: 16.0),
+            ),
+            onSort: _onSort,
+          ))
+      .toList();
 
   List<DataRow> _getRows(RxList<ProductModel> productList) => productList.map((product) {
         final cells = [product.nombre, product.tipo, product.disponible];
         return DataRow(
-          cells: _getCells(cells),
-        );
+            color: MaterialStateColor.resolveWith((states) {
+              if (!product.disponible) {
+                return Colors.blueGrey[400];
+              } else {
+                return Colors.blue;
+              }
+            }),
+            cells: _getCells(cells),
+            onSelectChanged: (bool selected) {
+              if (selected) {
+                if (product.disponible) {
+                  DisplayDialog.displayAvailableDialog(
+                      context, '¿Cambiar -${product.nombre}- a "NO DISPONIBLE"?', product.id, true);
+                } else {
+                  DisplayDialog.displayAvailableDialog(
+                      context, '¿Cambiar -${product.nombre}- a "DISPONIBLE"?', product.id, false);
+                }
+              }
+            });
       }).toList();
 
   List<DataCell> _getCells(List<dynamic> cells) =>
