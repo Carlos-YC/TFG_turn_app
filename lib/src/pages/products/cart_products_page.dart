@@ -9,13 +9,15 @@ class _ProductsPageState extends State<ProductsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.green,
       appBar: AppBar(
+        elevation: 0,
         flexibleSpace: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [Colors.green, Colors.lightGreen],
-              begin: FractionalOffset(0.0, 0.0),
-              end: FractionalOffset(1.0, 0.0),
+              colors: [Colors.lightGreen, Colors.green],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
               stops: [0.0, 1.0],
               tileMode: TileMode.clamp,
             ),
@@ -27,7 +29,6 @@ class _ProductsPageState extends State<ProductsPage> {
         ),
       ),
       body: _productsTable(context),
-      backgroundColor: Colors.green,
     );
   }
 

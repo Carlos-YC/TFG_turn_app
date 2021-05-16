@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:tfg_app/src/controllers/product_controller.dart';
 
-import 'package:tfg_app/src/providers/product_provider.dart';
-import 'package:tfg_app/src/dialog/display_dialog.dart';
+import 'package:tfg_app/src/models/product_model.dart';
 
 class ListProductsPage extends StatefulWidget {
   @override
@@ -9,110 +10,82 @@ class ListProductsPage extends StatefulWidget {
 }
 
 class _ListProductsPageState extends State<ListProductsPage> {
-  List products;
-  int sortColumnIndex;
-  bool isAscending = false;
+  RxList<ProductModel> _products;
+  int _sortColumnIndex = 2;
+  bool _isAscending = false;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Colors.blue, Colors.lightBlueAccent],
-              begin: FractionalOffset(0.0, 0.0),
-              end: FractionalOffset(1.0, 0.0),
-              stops: [0.0, 1.0],
-              tileMode: TileMode.clamp,
+    return GetBuilder<ListProductController>(
+      init: ListProductController(),
+      builder: (controller) => Scaffold(
+        backgroundColor: Colors.blue,
+        appBar: AppBar(
+          elevation: 0,
+          flexibleSpace: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Colors.lightBlueAccent, Colors.blue],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                stops: [0.0, 1.0],
+                tileMode: TileMode.clamp,
+              ),
             ),
           ),
+          title: Text('Productos', style: TextStyle(color: Colors.white, fontSize: 24.0)),
         ),
-        title: Text(
-          'Productos',
-          style: TextStyle(color: Colors.white, fontSize: 24.0),
-        ),
-      ),
-      body: _productsTable(context),
-      backgroundColor: Colors.blue,
-    );
-  }
-
-  Widget _productsTable(BuildContext context) {
-    return Container(
-      child: Padding(
-        padding: EdgeInsets.all(10.0),
-        child: SingleChildScrollView(
-          child: FutureBuilder(
-            future: ProductProvider().getAllProducts(),
-            builder: (context, snapshot) {
-              if (snapshot.hasError) print('Error');
-              if (!snapshot.hasData) return CircularProgressIndicator();
-              products = snapshot.data;
-              return _createDataTable(snapshot);
-            },
-          ),
-        ),
+        body: _productsTable(controller),
       ),
     );
   }
 
-  Widget _createDataTable(AsyncSnapshot snapshot) {
-    final columns = ['Producto', 'Tipo', 'Disponible'];
-
-    return DataTable(
-      showCheckboxColumn: false,
-      sortAscending: isAscending,
-      sortColumnIndex: sortColumnIndex,
-      columns: _getColumns(columns, snapshot),
-      rows: _getRows(snapshot),
-    );
+  Widget _productsTable(ListProductController controller) {
+    return Obx(() {
+      if (controller.productList.length == 0) {
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      } else {
+        this._products = controller.productList;
+        final columns = ['Producto', 'Tipo', 'Disponible'];
+        return DataTable(
+          sortAscending: _isAscending,
+          sortColumnIndex: _sortColumnIndex,
+          columns: _getColumns(columns),
+          rows: _getRows(controller.productList),
+        );
+      }
+    });
   }
 
-  List<DataColumn> _getColumns(List<String> columns, AsyncSnapshot snapshot) =>
+  List<DataColumn> _getColumns(List<String> columns) =>
       columns.map((String column) => DataColumn(label: Text(column), onSort: _onSort)).toList();
 
-  List<DataRow> _getRows(AsyncSnapshot products) => products.data.map<DataRow>((product) {
-        final cells = [product['nombre'], product['tipo'], product['disponible']];
+  List<DataRow> _getRows(RxList<ProductModel> productList) => productList.map((product) {
+        final cells = [product.nombre, product.tipo, product.disponible];
         return DataRow(
-            cells: _getCells(cells),
-            onSelectChanged: (bool selected) {
-              if (selected) {
-                if (product['disponible']) {
-                  DisplayDialog.displayAvailableDialog(
-                    context,
-                    '¿Cambiar -${product['nombre']}- a "NO DISPONIBLE"?',
-                    product['id'],
-                    true,
-                  );
-                } else {
-                  DisplayDialog.displayAvailableDialog(
-                    context,
-                    '¿Cambiar -${product['nombre']}- a "DISPONIBLE"?',
-                    product['id'],
-                    false,
-                  );
-                }
-              }
-            });
+          cells: _getCells(cells),
+        );
       }).toList();
 
-  List<DataCell> _getCells(List cells) => cells.map((data) => DataCell(Text('$data'))).toList();
+  List<DataCell> _getCells(List<dynamic> cells) =>
+      cells.map((data) => DataCell(Text('$data'))).toList();
 
   void _onSort(int columnIndex, bool ascending) {
     if (columnIndex == 0) {
-      products.sort((product1, product2) =>
-          _compareString(ascending, product1['nombre'], product2['nombre']));
+      _products.sort(
+          (product1, product2) => _compareString(ascending, product1.nombre, product2.nombre));
     } else if (columnIndex == 1) {
-      products.sort((product1, product2) =>
-          _compareString(ascending, '${product1['tipo']}', '${product2['tipo']}'));
+      _products.sort((product1, product2) =>
+          _compareString(ascending, '${product1.tipo}', '${product2.tipo}'));
     } else if (columnIndex == 2) {
-      products.sort((product1, product2) =>
-          _compareString(ascending, '${product1['disponible']}', '${product2['disponible']}'));
+      _products.sort((product1, product2) =>
+          _compareString(ascending, '${product1.disponible}', '${product2.disponible}'));
     }
     setState(() {
-      this.sortColumnIndex = columnIndex;
-      this.isAscending = ascending;
+      this._sortColumnIndex = columnIndex;
+      this._isAscending = ascending;
     });
   }
 

@@ -10,12 +10,13 @@ class UserPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        elevation: 0,
         flexibleSpace: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [Colors.green, Colors.lightGreen],
-              begin: FractionalOffset(0.0, 0.0),
-              end: FractionalOffset(1.0, 0.0),
+              colors: [Colors.lightGreen, Colors.green],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
               stops: [0.0, 1.0],
               tileMode: TileMode.clamp,
             ),
@@ -41,8 +42,8 @@ class UserPage extends StatelessWidget {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [Colors.green, Colors.lightGreen],
-          begin: Alignment.topRight,
-          end: Alignment.bottomLeft,
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
         ),
       ),
       child: Padding(

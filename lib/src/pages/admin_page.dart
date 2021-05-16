@@ -6,12 +6,13 @@ class AdminPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        elevation: 0,
         flexibleSpace: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [Colors.blue, Colors.lightBlueAccent],
-              begin: FractionalOffset(0.0, 0.0),
-              end: FractionalOffset(1.0, 0.0),
+              colors: [Colors.lightBlueAccent, Colors.blue],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
               stops: [0.0, 1.0],
               tileMode: TileMode.clamp,
             ),
@@ -35,8 +36,8 @@ class AdminPage extends StatelessWidget {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [Colors.blue, Colors.greenAccent],
-          begin: Alignment.topRight,
-          end: Alignment.bottomLeft,
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
         ),
       ),
       child: Padding(
