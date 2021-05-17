@@ -1,43 +1,44 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import 'package:tfg_app/src/config/config.dart';
+import 'package:tfg_app/src/controllers/turn_controller.dart';
 import 'package:tfg_app/src/providers/turn_provider.dart';
 import 'package:tfg_app/src/providers/user_provider.dart';
+import 'package:tfg_app/src/widgets/custom_box_decoration_widget.dart';
 
 class UserPage extends StatelessWidget {
+  final bool hasTurn = false;
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Colors.lightGreen, Colors.green],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              stops: [0.0, 1.0],
-              tileMode: TileMode.clamp,
-            ),
+    return GetBuilder<TurnUserController>(
+      init: TurnUserController(),
+      builder: (controller) => Scaffold(
+        appBar: AppBar(
+          elevation: 0,
+          flexibleSpace: CustomBoxDecoration(
+            color1: Colors.lightGreen,
+            color2: Colors.green,
           ),
+          title: Text(
+            SupermarketApp.sharedPreferences.getString(SupermarketApp.userEmail),
+            style: TextStyle(color: Colors.white, fontSize: 24.0),
+          ),
+          actions: [
+            IconButton(
+              icon: Icon(Icons.logout),
+              onPressed: () => UserProvider().logOut(context),
+            )
+          ],
         ),
-        title: Text(
-          SupermarketApp.sharedPreferences.getString(SupermarketApp.userEmail),
-          style: TextStyle(color: Colors.white, fontSize: 24.0),
-        ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.logout),
-            onPressed: () => UserProvider().logOut(context),
-          )
-        ],
+        body: _userScreen(controller, context),
       ),
-      body: _userScreen(context),
     );
   }
 
-  Widget _userScreen(BuildContext context) {
+  Widget _userScreen(TurnUserController controller, BuildContext context) {
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -50,30 +51,20 @@ class UserPage extends StatelessWidget {
         padding: EdgeInsets.all(15.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [_takeTurn(context), _products(context)],
+          children: [_takeTurn(controller, context), _products(context)],
         ),
       ),
     );
   }
 
-  Widget _takeTurn(BuildContext context) {
-    return FutureBuilder(
-      future: TurnProvider().hasTurn(),
-      builder: (context, snapshot) {
-        if (snapshot.hasError) print('Error');
-        if (!snapshot.hasData) return CircularProgressIndicator();
-        bool hasTurn = snapshot.data;
-        String _text;
-        String _route = 'userTurn';
-        if (!hasTurn) {
-          _text = 'Pedir turno';
-          _route = '';
-        } else {
-          _text = 'Ver turno';
-        }
-        return _boxButton(context, _text, _route);
-      },
-    );
+  Widget _takeTurn(TurnUserController controller, BuildContext context) {
+    return Obx(() {
+      if (controller.hasTurn.value) {
+        return _boxButton(context, 'Ver turno', 'userTurn');
+      } else {
+        return _boxButton(context, 'Pedir turno', '');
+      }
+    });
   }
 
   Widget _products(BuildContext context) {

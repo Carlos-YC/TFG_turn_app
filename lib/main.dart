@@ -13,8 +13,8 @@ import 'package:tfg_app/src/pages/authentication/select_authentication_page.dart
 import 'package:tfg_app/src/pages/authentication/register_page.dart';
 import 'package:tfg_app/src/pages/authentication/login_page.dart';
 
-import 'package:tfg_app/src/pages/admin_page.dart';
-import 'package:tfg_app/src/pages/user_page.dart';
+import 'package:tfg_app/src/pages/home/admin_page.dart';
+import 'package:tfg_app/src/pages/home/user_page.dart';
 
 import 'package:tfg_app/src/pages/products/list_products_page.dart';
 import 'package:tfg_app/src/pages/products/cart_products_page.dart';

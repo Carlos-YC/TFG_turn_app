@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:tfg_app/src/dialog/display_dialog.dart';
 import 'package:tfg_app/src/providers/user_provider.dart';
-import 'package:tfg_app/src/widgets/custom_text_field.dart';
+import 'package:tfg_app/src/widgets/custom_text_field_widget.dart';
 
 class LoginPage extends StatelessWidget {
   final TextEditingController _emailTextEditingController = TextEditingController();

@@ -40,15 +40,6 @@ class TurnProvider {
     }
   }
 
-  Future<bool> hasTurn() async {
-    bool _hasTurn;
-    var userLogged = _turnRef.orderByChild('id_usuario').equalTo(_uid);
-    await userLogged.once().then((DataSnapshot snapshot) {
-      (snapshot.value != null) ? _hasTurn = true : _hasTurn = false;
-    });
-    return _hasTurn;
-  }
-
   Future<void> createTurn() async {
     var _lastKeyRef = _turnRef.orderByChild('num').limitToLast(1);
     DateTime _timeNow = new DateTime.now();

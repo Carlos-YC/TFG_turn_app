@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+
 import 'package:tfg_app/src/providers/user_provider.dart';
+import 'package:tfg_app/src/widgets/custom_box_decoration_widget.dart';
 
 class AdminPage extends StatelessWidget {
   @override
@@ -7,16 +9,9 @@ class AdminPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Colors.lightBlueAccent, Colors.blue],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              stops: [0.0, 1.0],
-              tileMode: TileMode.clamp,
-            ),
-          ),
+        flexibleSpace: CustomBoxDecoration(
+          color1: Colors.lightBlueAccent,
+          color2: Colors.blue,
         ),
         title:
             Text('Sesión de administrador', style: TextStyle(color: Colors.white, fontSize: 24.0)),

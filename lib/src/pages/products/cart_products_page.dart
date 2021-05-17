@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:tfg_app/src/widgets/custom_box_decoration_widget.dart';
+
 class ProductsPage extends StatefulWidget {
   @override
   _ProductsPageState createState() => _ProductsPageState();
@@ -12,16 +14,9 @@ class _ProductsPageState extends State<ProductsPage> {
       backgroundColor: Colors.green,
       appBar: AppBar(
         elevation: 0,
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Colors.lightGreen, Colors.green],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              stops: [0.0, 1.0],
-              tileMode: TileMode.clamp,
-            ),
-          ),
+        flexibleSpace: CustomBoxDecoration(
+          color1: Colors.lightGreen,
+          color2: Colors.green,
         ),
         title: Text(
           'Productos',
