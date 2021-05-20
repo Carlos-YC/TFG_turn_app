@@ -6,7 +6,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:tfg_app/src/config/config.dart';
 
 class TurnProvider {
-  final String _uid = SupermarketApp.sharedPreferences.getString(SupermarketApp.userUID);
+  final String _uid = SupermarketApp.auth.currentUser.uid;
   final _turnRef = FirebaseDatabase.instance
       .reference()
       .child('codigo_supermercado')
@@ -54,7 +54,7 @@ class TurnProvider {
           _setNumber = value['tu_num'] + 1;
         });
 
-        if(_setNumber > 99) _setNumber = 1;
+        if (_setNumber > 99) _setNumber = 1;
 
         _turnRef.child('charcuteria_$_lastNumber').set({
           'app': true,
@@ -75,7 +75,20 @@ class TurnProvider {
     });
   }
 
-  Future<void> getTurn() async {}
+  Future<List> getUserTurnInfo() async {
+    List turnUserInfo = [];
+    var _userLogged = _turnRef.orderByChild('id_usuario').equalTo(_uid);
+    await _userLogged.once().then((DataSnapshot snapshot) {
+      if (snapshot.value != null) {
+        turnUserInfo.clear();
+        Map<dynamic, dynamic> _values = snapshot.value;
+        _values.forEach((key, value) {
+          turnUserInfo.add(value);
+        });
+      }
+    });
+    return turnUserInfo;
+  }
 
   Future<void> nextTurn() async {
     eliminateTurn();

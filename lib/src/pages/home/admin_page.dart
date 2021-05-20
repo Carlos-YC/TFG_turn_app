@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import 'package:get/get.dart';
+import 'package:auto_size_text/auto_size_text.dart';
+
 import 'package:tfg_app/src/providers/user_provider.dart';
 import 'package:tfg_app/src/widgets/custom_box_decoration_widget.dart';
 
@@ -22,11 +25,11 @@ class AdminPage extends StatelessWidget {
           )
         ],
       ),
-      body: _adminScreen(context),
+      body: _adminScreen(),
     );
   }
 
-  Widget _adminScreen(BuildContext context) {
+  Widget _adminScreen() {
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -39,32 +42,32 @@ class AdminPage extends StatelessWidget {
         padding: EdgeInsets.all(15.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [_turns(context), _products(context)],
+          children: [_turns(), _products()],
         ),
       ),
     );
   }
 
-  Widget _turns(BuildContext context) {
+  Widget _turns() {
     String _text = 'Ver turnos';
     String _route = 'adminTurn';
 
-    return _boxButton(context, _text, _route);
+    return _boxButton(_text, _route);
   }
 
-  Widget _products(BuildContext context) {
+  Widget _products() {
     String _text = 'Productos';
     String _route = 'listProducts';
 
-    return _boxButton(context, _text, _route);
+    return _boxButton(_text, _route);
   }
 
-  Widget _boxButton(BuildContext context, String text, String route) {
+  Widget _boxButton(String text, String route) {
     return Expanded(
       child: Padding(
         padding: EdgeInsets.all(15.0),
         child: InkWell(
-          onTap: () => Navigator.pushNamed(context, route),
+          onTap: () => Get.toNamed(route),
           child: Container(
             margin: EdgeInsets.symmetric(vertical: 10.0),
             padding: EdgeInsets.symmetric(vertical: 50.0),
@@ -90,13 +93,11 @@ class AdminPage extends StatelessWidget {
   }
 
   Widget _textShow(String text) {
-    return FittedBox(
-      child: Text(
-        text,
-        textAlign: TextAlign.center,
-        overflow: TextOverflow.ellipsis,
-        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 48.0, color: Color(0xFF3f4756)),
-      ),
+    return AutoSizeText(
+      text,
+      textAlign: TextAlign.center,
+      style: TextStyle(fontSize: 58, fontWeight: FontWeight.bold, color: Color(0xFF3f4756)),
+      maxLines: 1,
     );
   }
 }

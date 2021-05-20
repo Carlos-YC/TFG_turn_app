@@ -75,11 +75,7 @@ class _ListProductsPageState extends State<ListProductsPage> {
         final cells = [product.nombre, product.tipo, product.disponible];
         return DataRow(
             color: MaterialStateColor.resolveWith((states) {
-              if (!product.disponible) {
-                return Colors.blueGrey[400];
-              } else {
-                return Colors.blue;
-              }
+              return (!product.disponible) ? Colors.blueGrey[400] : Colors.blue;
             }),
             cells: _getCells(cells),
             onSelectChanged: (bool selected) {

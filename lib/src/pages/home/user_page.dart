@@ -1,5 +1,6 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:get/get.dart';
 
 import 'package:tfg_app/src/config/config.dart';
@@ -13,8 +14,8 @@ class UserPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<TurnUserController>(
-      init: TurnUserController(),
+    return GetBuilder<UserHasTurnController>(
+      init: UserHasTurnController(),
       builder: (controller) => Scaffold(
         appBar: AppBar(
           elevation: 0,
@@ -33,12 +34,12 @@ class UserPage extends StatelessWidget {
             )
           ],
         ),
-        body: _userScreen(controller, context),
+        body: _userScreen(controller),
       ),
     );
   }
 
-  Widget _userScreen(TurnUserController controller, BuildContext context) {
+  Widget _userScreen(UserHasTurnController controller) {
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -51,36 +52,35 @@ class UserPage extends StatelessWidget {
         padding: EdgeInsets.all(15.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [_takeTurn(controller, context), _products(context)],
+          children: [_takeTurn(controller), _products()],
         ),
       ),
     );
   }
 
-  Widget _takeTurn(TurnUserController controller, BuildContext context) {
+  Widget _takeTurn(UserHasTurnController controller) {
     return Obx(() {
       if (controller.hasTurn.value) {
-        return _boxButton(context, 'Ver turno', 'userTurn');
+        return _boxButton('Ver turno', 'userTurn');
       } else {
-        return _boxButton(context, 'Pedir turno', '');
+        return _boxButton('Pedir turno', '');
       }
     });
   }
 
-  Widget _products(BuildContext context) {
+  Widget _products() {
     String _text = 'Ver productos';
     String _route = 'products';
 
-    return _boxButton(context, _text, _route);
+    return _boxButton(_text, _route);
   }
 
-  Widget _boxButton(BuildContext context, String text, String route) {
+  Widget _boxButton(String text, String route) {
     return Expanded(
       child: Padding(
         padding: EdgeInsets.all(15.0),
         child: InkWell(
-          onTap: () =>
-              (route == '') ? _readQR(context, 'userTurn') : Navigator.pushNamed(context, route),
+          onTap: () => (route == '') ? _readQR('userTurn') : Get.toNamed(route),
           child: Container(
             margin: EdgeInsets.symmetric(vertical: 10.0),
             padding: EdgeInsets.all(20.0),
@@ -114,10 +114,8 @@ class UserPage extends StatelessWidget {
     );
   }
 
-  Future<void> _readQR(BuildContext context, String route) async {
+  Future<void> _readQR(String route) async {
     bool _isScanDB = await TurnProvider().readQR();
-    if (_isScanDB) {
-      Navigator.pushNamed(context, route);
-    }
+    if (_isScanDB) Get.toNamed(route);
   }
 }
