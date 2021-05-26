@@ -90,11 +90,40 @@ class TurnProvider {
     return turnUserInfo;
   }
 
-  Future<void> nextTurn() async {
-    eliminateTurn();
+  Future<int> getClientTurnNumber() async {
+    int turnUserNumber;
+    var _userLogged = _turnRef.orderByChild('num').limitToFirst(1);
+    await _userLogged.once().then((DataSnapshot snapshot) {
+      if (snapshot.value != null) {
+        Map<dynamic, dynamic> _values = snapshot.value;
+        _values.forEach((key, value) {
+          turnUserNumber = value['tu_num'];
+        });
+      }
+    });
+    return turnUserNumber;
   }
 
-  Future<void> eliminateTurn() async {}
+  Future<void> nextTurn() async {
+    await _turnRef.limitToFirst(1).once().then((event) async {
+      Map map = event.value;
+      String keyToDelete = map.keys.toList()[0].toString();
+      await _turnRef
+          .child(keyToDelete)
+          .remove()
+          .then((_) => print('$keyToDelete se borró correctamente'));
+    });
+  }
 
-  Future<void> updateTurnInformation() async {}
+  Future<void> cancelTurn() async {
+    var _userLogged = _turnRef.orderByChild('id_usuario').equalTo(_uid);
+    await _userLogged.once().then((event) async {
+      Map map = event.value;
+      String keyToDelete = map.keys.toList()[0].toString();
+      await _turnRef
+          .child(keyToDelete)
+          .remove()
+          .then((_) => print('$keyToDelete se borró correctamente'));
+    });
+  }
 }
