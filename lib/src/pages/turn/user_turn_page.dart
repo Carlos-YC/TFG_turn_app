@@ -46,75 +46,66 @@ class _UserTurnPageState extends State<UserTurnPage> {
           ),
         );
       } else {
-        return Container(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Card(
-                margin: EdgeInsets.only(left: 20.0, right: 20.0),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
-                color: Colors.teal,
-                elevation: 5,
-                child: Padding(
-                  padding: EdgeInsets.only(bottom: 10.0),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      ListTile(
-                        leading: Icon(
-                          Icons.confirmation_num_outlined,
-                          size: 60.0,
-                        ),
-                        title: Text(
+        if (controller.turnUserInfo.length == 0) {
+          return Center(child: CircularProgressIndicator());
+        } else {
+          return Container(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Card(
+                  margin: EdgeInsets.only(left: 20.0, right: 20.0),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
+                  color: Colors.teal,
+                  elevation: 5,
+                  child: Padding(
+                    padding: EdgeInsets.all(20.0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
                           'Turno de charcutería',
                           style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
                         ),
-                      ),
-                      SizedBox(
-                        height: 20.0,
-                        width: 200.0,
-                        child: Divider(
-                          color: Colors.green,
-                          thickness: 4.0,
-                        ),
-                      ),
-                      Column(
-                        //mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          _turnInfoText(Icons.confirmation_num_outlined,
-                              'Tu turno: ${controller.turnUserInfo[0]['tu_num'].toString()}', 20.0),
-                          _turnInfoText(Icons.people,
-                              'Clientes por delante: ${controller.numUsers.toString()}', 16.0),
-                          _turnInfoText(Icons.access_time, 'Tiempo de espera aproximado: -', 16.0),
-                          SizedBox(
-                            height: 30.0,
-                            width: 100.0,
-                            child: Divider(
-                              color: Colors.green,
-                              thickness: 4.0,
-                            ),
+                        SizedBox(
+                          height: 20.0,
+                          width: 200.0,
+                          child: Divider(
+                            color: Colors.green,
+                            thickness: 4.0,
                           ),
-                          _cancelButton(),
-                        ],
-                      )
-                    ],
+                        ),
+                        Container(
+                          padding: EdgeInsets.only(top: 10.0, bottom: 5.0),
+                          child: Column(
+                            children: [
+                              _turnInfoText(
+                                  Icons.confirmation_num_outlined,
+                                  'Tu turno: ${controller.turnUserInfo[0]['tu_num'].toString()}',
+                                  20.0),
+                              _turnInfoText(Icons.people,
+                                  'Clientes por delante: ${controller.numUsers.toString()}', 16.0),
+                              _turnInfoText(Icons.access_time, 'Tiempo de espera aprox.: -', 16.0),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: 30.0,
+                          width: 100.0,
+                          child: Divider(
+                            color: Colors.green,
+                            thickness: 4.0,
+                          ),
+                        ),
+                        _cancelButton(),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              SizedBox(
-                height: 50.0,
-                width: 300.0,
-                child: Divider(
-                  color: Colors.blueGrey,
-                  thickness: 4.0,
-                ),
-              ),
-
-              /* --- Esto necesita modificación y mejora (ver los servicios disponibles y que no se han hecho uso) -------- */
-              //_newTurn()
-            ],
-          ),
-        );
+              ],
+            ),
+          );
+        }
       }
     });
   }
@@ -136,6 +127,7 @@ class _UserTurnPageState extends State<UserTurnPage> {
     return ElevatedButton(
       onPressed: () {
         TurnProvider().cancelTurn();
+        Get.offNamed('userPage');
       },
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 20.0),
@@ -151,41 +143,5 @@ class _UserTurnPageState extends State<UserTurnPage> {
         textStyle: TextStyle(color: Colors.white),
       ),
     );
-  }
-
-  Widget _newTurn() {
-    Padding(
-      padding: EdgeInsets.all(20.0),
-      child: InkWell(
-        onTap: () => _readQR('userTurn'),
-        child: Container(
-          margin: EdgeInsets.symmetric(vertical: 10.0),
-          padding: EdgeInsets.all(20.0),
-          decoration: BoxDecoration(
-            color: Color(0xFF97f48a),
-            borderRadius: BorderRadius.circular(7.0),
-            boxShadow: <BoxShadow>[
-              BoxShadow(
-                color: Colors.black26,
-                blurRadius: 3.0,
-                offset: Offset(0.5, 1.5),
-                spreadRadius: 3.0,
-              )
-            ],
-          ),
-          child: Center(
-            child: Text(
-              'Pedir otro turno',
-              style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Color(0xFF3f4756)),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Future<void> _readQR(String route) async {
-    bool _isScanDB = await TurnProvider().readQR();
-    if (_isScanDB) Get.toNamed(route);
   }
 }

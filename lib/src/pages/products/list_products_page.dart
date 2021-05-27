@@ -39,10 +39,7 @@ class _ListProductsPageState extends State<ListProductsPage> {
     return Obx(() {
       if (controller.productList.length == 0) {
         return Center(
-          child: Center(
-            child: Text('No hay productos',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24.0)),
-          ),
+          child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.red)),
         );
       } else {
         this._products = controller.productList;

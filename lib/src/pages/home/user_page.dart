@@ -116,6 +116,6 @@ class UserPage extends StatelessWidget {
 
   Future<void> _readQR(String route) async {
     bool _isScanDB = await TurnProvider().readQR();
-    if (_isScanDB) Get.toNamed(route);
+    (_isScanDB) ? Get.toNamed(route) : print('¡QR no valido!');
   }
 }
