@@ -35,8 +35,11 @@ class AdminTurnPage extends StatelessWidget {
 
   Widget _box(AdminTurnController controller) {
     return Obx(() {
-      print('User Number: ${controller.userNumber.value}');
-      if (controller.userNumber.value < 1) {
+      if (controller.userNumber.value == null) {
+        return Center(
+          child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.red)),
+        );
+      } else if (controller.userNumber.value < 1) {
         return Center(child: Text('No hay clientes', style: TextStyle(fontSize: 24.0)));
       } else {
         return _showInfo(controller);

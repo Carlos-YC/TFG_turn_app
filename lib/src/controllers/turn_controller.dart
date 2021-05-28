@@ -77,8 +77,8 @@ class TurnUserInfoController extends GetxController {
 class AdminTurnController extends GetxController {
   StreamSubscription<Event> firstUser;
   StreamSubscription<Event> lastUser;
-  RxInt allUsers = RxInt(0);
-  RxInt userNumber = RxInt(0);
+  RxInt allUsers = RxInt(null);
+  RxInt userNumber = RxInt(null);
   RxInt firstUserNumber = RxInt(0);
   RxInt lastUserNumber = RxInt(0);
 
