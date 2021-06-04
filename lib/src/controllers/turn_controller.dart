@@ -98,7 +98,7 @@ class AdminTurnController extends GetxController {
 
   void firstUserInfoRealTimeDB() {
     var _firstUserInfo = _turnRealTimeDB.orderByKey().limitToFirst(1);
-    this.firstUser = _firstUserInfo.onValue.listen((event) async {
+    this.firstUser = _firstUserInfo.onValue.listen((event) {
       final _firstUserData = event.snapshot.value;
       if (_firstUserData != null) {
         _firstUserData.forEach((key, value) {
@@ -114,7 +114,7 @@ class AdminTurnController extends GetxController {
 
   void lastUserInfoRealTimeDB() {
     var _lastUserInfo = _turnRealTimeDB.orderByKey().limitToLast(1);
-    this.lastUser = _lastUserInfo.onValue.listen((event) async {
+    this.lastUser = _lastUserInfo.onValue.listen((event) {
       final _lastUserData = event.snapshot.value;
       if (_lastUserData != null) {
         _lastUserData.forEach((key, value) {

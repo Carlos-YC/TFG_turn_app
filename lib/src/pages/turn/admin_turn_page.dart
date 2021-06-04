@@ -85,10 +85,10 @@ class AdminTurnPage extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.confirmation_num_outlined, size: 32.0),
+                  Icon(Icons.campaign_rounded, size: 80.0),
                   Text(
                     controller.userNumber.value.toString(),
-                    style: TextStyle(fontSize: 32.0, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 42.0, fontWeight: FontWeight.bold),
                   ),
                 ],
               ),
@@ -104,10 +104,10 @@ class AdminTurnPage extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.people, size: 32.0),
+                  Icon(Icons.people, size: 80.0),
                   Text(
-                    controller.allUsers.value.toString(),
-                    style: TextStyle(fontSize: 32.0, fontWeight: FontWeight.bold),
+                    '+ ${controller.allUsers.value.toString()}',
+                    style: TextStyle(fontSize: 42.0, fontWeight: FontWeight.bold),
                   ),
                 ],
               ),
@@ -128,7 +128,7 @@ class AdminTurnPage extends StatelessWidget {
           padding: EdgeInsets.symmetric(vertical: 50.0),
           decoration: BoxDecoration(
             color: Colors.redAccent[200],
-            borderRadius: BorderRadius.circular(7.0),
+            borderRadius: BorderRadius.circular(40.0),
             boxShadow: <BoxShadow>[
               BoxShadow(
                 color: Colors.black26,
@@ -145,7 +145,7 @@ class AdminTurnPage extends StatelessWidget {
                 textAlign: TextAlign.center,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                    fontWeight: FontWeight.bold, fontSize: 36.0, color: Color(0xFF3f4756)),
+                    fontWeight: FontWeight.bold, fontSize: 36.0, color: Colors.white),
               ),
             ),
           ),

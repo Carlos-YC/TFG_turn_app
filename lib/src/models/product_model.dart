@@ -10,6 +10,7 @@ class ProductModel {
     @required this.informacionNutricional,
     @required this.ingredientes,
     @required this.alergenos,
+    @required this.descuento,
     @required this.disponible,
     @required this.id,
     @required this.imagenUrl,
@@ -25,6 +26,7 @@ class ProductModel {
   final InformacionNutricional informacionNutricional;
   final List<String> ingredientes;
   final List<String> alergenos;
+  final int descuento;
   final bool disponible;
   final String id;
   final String imagenUrl;
@@ -44,6 +46,7 @@ class ProductModel {
     informacionNutricional  : InformacionNutricional.fromMap(json["informacionNutricional"]),
     ingredientes            : List<String>.from(json["ingredientes"].map((x) => x)),
     alergenos               : List<String>.from(json["alergenos"].map((x) => x)),
+    descuento               : json["descuento"] == null ? 0 : json["descuento"],
     disponible              : json["disponible"] == '' ? false : json["disponible"],
     id                      : json["id"].toString(),
     imagenUrl               : json["imagenUrl"].toString(),
@@ -60,6 +63,7 @@ class ProductModel {
     "informacionNutricional"  : informacionNutricional.toMap(),
     "ingredientes"            : List<dynamic>.from(ingredientes.map((x) => x)),
     "alergenos"               : List<dynamic>.from(alergenos.map((x) => x)),
+    "descuento"               : descuento,
     "disponible"              : disponible,
     "id"                      : id,
     "imagenUrl"               : imagenUrl,

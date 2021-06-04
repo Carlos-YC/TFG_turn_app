@@ -17,7 +17,7 @@ import 'package:tfg_app/src/pages/home/admin_page.dart';
 import 'package:tfg_app/src/pages/home/user_page.dart';
 
 import 'package:tfg_app/src/pages/products/list_products_page.dart';
-import 'package:tfg_app/src/pages/products/cart_products_page.dart';
+import 'package:tfg_app/src/pages/products/card_products_page.dart';
 import 'package:tfg_app/src/pages/products/detail_product_page.dart';
 
 import 'package:tfg_app/src/pages/turn/user_turn_page.dart';
@@ -50,7 +50,7 @@ class MyApp extends StatelessWidget {
           'adminTurn': (BuildContext context) => AdminTurnPage(),
           'products': (BuildContext context) => ProductsPage(),
           'listProducts': (BuildContext context) => ListProductsPage(),
-          'productDetails': (BuildContext context) => ProductDetails()
+          'detailsProduct': (BuildContext context) => ProductDetails(),
         },
         theme: ThemeData(
             primaryColor: Colors.green, visualDensity: VisualDensity.adaptivePlatformDensity));

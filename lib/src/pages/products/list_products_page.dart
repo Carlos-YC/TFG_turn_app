@@ -30,7 +30,7 @@ class _ListProductsPageState extends State<ListProductsPage> {
           ),
           title: Text('Productos', style: TextStyle(color: Colors.white, fontSize: 24.0)),
         ),
-        body: _productsTable(controller),
+        body: SingleChildScrollView(child: _productsTable(controller)),
       ),
     );
   }
