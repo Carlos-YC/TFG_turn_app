@@ -84,12 +84,15 @@ class _ProductsPageState extends State<ProductsPage> {
 
   Widget _checkUrl(String imgUrl) {
     return Expanded(
-      child: Image.network(
-        imgUrl,
-        fit: BoxFit.cover,
-        errorBuilder: (BuildContext context, Object exception, StackTrace stackTrace) {
-          return Icon(Icons.image, size: 48.0);
-        },
+      child: Hero(
+        tag: imgUrl,
+        child: Image.network(
+          imgUrl,
+          fit: BoxFit.cover,
+          errorBuilder: (BuildContext context, Object exception, StackTrace stackTrace) {
+            return Icon(Icons.image, size: 48.0);
+          },
+        ),
       ),
     );
   }

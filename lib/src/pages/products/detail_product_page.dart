@@ -50,9 +50,12 @@ class _ProductDetailsState extends State<ProductDetails> {
       padding: EdgeInsets.symmetric(horizontal: 20.0),
       child: Row(
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(15.0),
-            child: _checkUrl(product.imagenUrl),
+          Hero(
+            tag: product.imagenUrl,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(15.0),
+              child: _checkUrl(product.imagenUrl),
+            ),
           ),
           SizedBox(width: 30.0),
           Flexible(
