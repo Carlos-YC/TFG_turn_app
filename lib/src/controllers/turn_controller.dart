@@ -11,9 +11,9 @@ final _turnRealTimeDB = FirebaseDatabase.instance
     .child('codigo_supermercado')
     .child('cola_espera')
     .child('charcuteria');
-final String _uid = SupermarketApp.auth.currentUser.uid;
 
 class UserHasTurnController extends GetxController {
+  final String _uid = SupermarketApp.auth.currentUser.uid;
   StreamSubscription<Event> listener;
   RxBool hasTurn = RxBool(false);
 

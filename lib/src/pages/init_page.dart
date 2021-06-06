@@ -23,7 +23,7 @@ class _InitPageState extends State<InitPage> {
       if (SupermarketApp.auth.currentUser == null) {
         Get.offNamed('authentication');
       } else {
-        bool isAdmin = await UserProvider().isAdminLooged();
+        bool isAdmin = await UserProvider().isAdminLogged();
         isAdmin ? Get.offNamed('adminPage') : Get.offNamed('userPage');
       }
     });

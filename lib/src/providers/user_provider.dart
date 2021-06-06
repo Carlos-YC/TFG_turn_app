@@ -49,7 +49,7 @@ class UserProvider {
       SupermarketApp.userCartList: ['garbageValue']
     });
 
-    await SupermarketApp.sharedPreferences.setString('uid', newUser.uid);
+    await SupermarketApp.sharedPreferences.setString(SupermarketApp.userUID, newUser.uid);
     await SupermarketApp.sharedPreferences.setString(SupermarketApp.userEmail, newUser.email);
     await SupermarketApp.sharedPreferences
         .setStringList(SupermarketApp.userCartList, ['garbageValue']);
@@ -63,10 +63,9 @@ class UserProvider {
         .then((DataSnapshot snapshot) async {
       if (snapshot.value != null) {
         await SupermarketApp.sharedPreferences
-            .setString('uid', snapshot.value[SupermarketApp.userUID]);
+            .setString(SupermarketApp.userUID, snapshot.value[SupermarketApp.userUID]);
         await SupermarketApp.sharedPreferences
             .setString(SupermarketApp.userEmail, snapshot.value[SupermarketApp.userEmail]);
-
         List<String> _cartList = snapshot.value[SupermarketApp.userCartList].cast<String>();
         await SupermarketApp.sharedPreferences
             .setStringList(SupermarketApp.userCartList, _cartList);
@@ -80,7 +79,7 @@ class UserProvider {
             .then((DataSnapshot snapshot) async {
           if (snapshot.value != null) {
             await SupermarketApp.sharedPreferences
-                .setString('uid', snapshot.value[SupermarketApp.userUID]);
+                .setString(SupermarketApp.userUID, snapshot.value[SupermarketApp.userUID]);
             await SupermarketApp.sharedPreferences
                 .setString(SupermarketApp.userEmail, snapshot.value[SupermarketApp.userEmail]);
 
@@ -94,20 +93,20 @@ class UserProvider {
   }
 
   Future _deleteSessionInfo() async {
-    await SupermarketApp.sharedPreferences.setString('uid', 'uid');
+    await SupermarketApp.sharedPreferences.setString(SupermarketApp.userUID, 'uid');
     await SupermarketApp.sharedPreferences.setString(SupermarketApp.userEmail, 'email');
     await SupermarketApp.sharedPreferences.setStringList(SupermarketApp.userCartList, ['userCart']);
   }
 
-  Future<bool> isAdminLooged() async {
-    bool admin = false;
+  Future<bool> isAdminLogged() async {
+    bool isAdmin = false;
     await userDatabaseReference
         .child('admins')
         .child(SupermarketApp.auth.currentUser.uid)
         .once()
         .then((DataSnapshot snapshot) {
-      if (snapshot.value != null) admin = true;
+      if (snapshot.value != null) isAdmin = true;
     });
-    return admin;
+    return isAdmin;
   }
 }
