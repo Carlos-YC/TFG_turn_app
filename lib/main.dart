@@ -22,23 +22,41 @@ import 'package:tfg_app/src/pages/products/detail_product_page.dart';
 
 import 'package:tfg_app/src/pages/turn/user_turn_page.dart';
 import 'package:tfg_app/src/pages/turn/admin_turn_page.dart';
-
+import 'package:tfg_app/src/providers/push_notification_provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   SupermarketApp.auth = FirebaseAuth.instance;
   SupermarketApp.sharedPreferences = await SharedPreferences.getInstance();
+  await PushNotificationProvider.initializeApp();
 
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  final GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
+
+  @override
+  void initState() {
+    super.initState();
+
+    PushNotificationProvider.messagesStream.listen((message) {
+      navigatorKey.currentState.pushNamed('userTurn');
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
         debugShowCheckedModeBanner: false,
         title: SupermarketApp.appName,
+        navigatorKey: navigatorKey,
         home: InitPage(),
         routes: {
           'authentication': (BuildContext context) => SelectAuthenticationPage(),
