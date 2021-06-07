@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
-import 'package:tfg_app/src/providers/product_provider.dart';
+import 'package:tfg_app/src/controllers/product_controller.dart';
+import 'package:tfg_app/src/models/product_model.dart';
 import 'package:tfg_app/src/dialog/display_dialog.dart';
+import 'package:tfg_app/src/widgets/custom_box_decoration_widget.dart';
 
 class ListProductsPage extends StatefulWidget {
   @override
@@ -9,108 +12,99 @@ class ListProductsPage extends StatefulWidget {
 }
 
 class _ListProductsPageState extends State<ListProductsPage> {
-  List products;
-  int sortColumnIndex;
-  bool isAscending = false;
+  RxList<ProductModel> _products;
+  int _sortColumnIndex = 2;
+  bool _isAscending = false;
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size; // Para que sea adaptativo
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          flexibleSpace: Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Colors.blue, Colors.lightBlueAccent],
-                begin: FractionalOffset(0.0, 0.0),
-                end: FractionalOffset(1.0, 0.0),
-                stops: [0.0, 1.0],
-                tileMode: TileMode.clamp,
-              ),
-            ),
-          ),
-          title: Text(
-            'Productos',
-            style: TextStyle(color: Colors.white, fontSize: 24.0),
-          ),
-        ),
-        body: _productsTable(context, size),
+    return GetBuilder<ListProductController>(
+      init: ListProductController(),
+      builder: (controller) => Scaffold(
         backgroundColor: Colors.blue,
-      ),
-    );
-  }
-
-  Widget _productsTable(BuildContext context, Size size) {
-    return Container(
-      width: size.width * 1,
-      height: size.height * 1,
-      child: Padding(
-        padding: EdgeInsets.all(10.0),
-        child: SingleChildScrollView(
-          child: FutureBuilder(
-            future: ProductProvider().getAllProducts(),
-            builder: (context, snapshot) {
-              //if (snapshot.connectionState != ConnectionState.done) print('Error conexión');
-              if (snapshot.hasError) print('Error');
-              if (!snapshot.hasData) return CircularProgressIndicator();
-              products = snapshot.data;
-              return _createDataTable(snapshot);
-            },
+        appBar: AppBar(
+          elevation: 0,
+          flexibleSpace: CustomBoxDecoration(
+            color1: Colors.lightBlueAccent,
+            color2: Colors.blue,
           ),
+          title: Text('Productos', style: TextStyle(color: Colors.white, fontSize: 24.0)),
         ),
+        body: SingleChildScrollView(child: _productsTable(controller)),
       ),
     );
   }
 
-  Widget _createDataTable(AsyncSnapshot snapshot) {
-    final columns = ['Producto', 'Tipo', 'Disponible'];
-
-    return DataTable(
-      showCheckboxColumn: false,
-      sortAscending: isAscending,
-      sortColumnIndex: sortColumnIndex,
-      columns: _getColumns(columns, snapshot),
-      rows: _getRows(snapshot),
-    );
+  Widget _productsTable(ListProductController controller) {
+    return Obx(() {
+      if (controller.productList.length == 0) {
+        return Center(
+          child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.red)),
+        );
+      } else {
+        this._products = controller.productList;
+        final columns = ['Producto', 'Tipo', 'Disponible'];
+        return Container(
+          padding: EdgeInsets.all(5.0),
+          child: DataTable(
+            showCheckboxColumn: false,
+            sortAscending: _isAscending,
+            sortColumnIndex: _sortColumnIndex,
+            columns: _getColumns(columns),
+            rows: _getRows(controller.productList),
+          ),
+        );
+      }
+    });
   }
 
-  List<DataColumn> _getColumns(List<String> columns, AsyncSnapshot snapshot) =>
-      columns.map((String column) => DataColumn(label: Text(column), onSort: _onSort)).toList();
+  List<DataColumn> _getColumns(List<String> columns) => columns
+      .map((String column) => DataColumn(
+            label: Text(
+              column,
+              style: TextStyle(fontSize: 16.0),
+            ),
+            onSort: _onSort,
+          ))
+      .toList();
 
-  List<DataRow> _getRows(AsyncSnapshot products) => products.data.map<DataRow>((product) {
-        final cells = [product['nombre'], product['tipo'], product['disponible']];
+  List<DataRow> _getRows(RxList<ProductModel> productList) => productList.map((product) {
+        final cells = [product.nombre, product.tipo, product.disponible];
         return DataRow(
-          cells: _getCells(cells),
+            color: MaterialStateColor.resolveWith((states) {
+              return (!product.disponible) ? Colors.blueGrey[400] : Colors.blue;
+            }),
+            cells: _getCells(cells),
             onSelectChanged: (bool selected) {
               if (selected) {
-                if (product['disponible']) {
+                if (product.disponible) {
                   DisplayDialog.displayAvailableDialog(
-                      context, '¿Cambiar -${product['nombre']}- a "NO DISPONIBLE"?', product['id'], true);
+                      context, '¿Cambiar -${product.nombre}- a "NO DISPONIBLE"?', product.id, true);
                 } else {
                   DisplayDialog.displayAvailableDialog(
-                      context, '¿Cambiar -${product['nombre']}- a "DISPONIBLE"?', product['id'], false);
+                      context, '¿Cambiar -${product.nombre}- a "DISPONIBLE"?', product.id, false);
                 }
               }
             });
       }).toList();
 
-  List<DataCell> _getCells(List cells) => cells.map((data) => DataCell(Text('$data'))).toList();
+  List<DataCell> _getCells(List<dynamic> cells) =>
+      cells.map((data) => DataCell(Text('$data'))).toList();
 
   void _onSort(int columnIndex, bool ascending) {
     if (columnIndex == 0) {
-      products.sort((product1, product2) =>
-          _compareString(ascending, product1['nombre'], product2['nombre']));
+      _products.sort(
+          (product1, product2) => _compareString(ascending, product1.nombre, product2.nombre));
     } else if (columnIndex == 1) {
-      products.sort((product1, product2) =>
-          _compareString(ascending, '${product1['tipo']}', '${product2['tipo']}'));
+      _products.sort((product1, product2) =>
+          _compareString(ascending, '${product1.tipo}', '${product2.tipo}'));
     } else if (columnIndex == 2) {
-      products.sort((product1, product2) =>
-          _compareString(ascending, '${product1['disponible']}', '${product2['disponible']}'));
+      _products.sort((product1, product2) =>
+          _compareString(ascending, '${product1.disponible}', '${product2.disponible}'));
     }
     setState(() {
-      this.sortColumnIndex = columnIndex;
-      this.isAscending = ascending;
+      this._sortColumnIndex = columnIndex;
+      this._isAscending = ascending;
     });
   }
 

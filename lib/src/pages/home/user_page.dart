@@ -1,24 +1,27 @@
 import 'package:flutter/material.dart';
 
+import 'package:auto_size_text/auto_size_text.dart';
+import 'package:get/get.dart';
+
 import 'package:tfg_app/src/config/config.dart';
+import 'package:tfg_app/src/controllers/turn_controller.dart';
+import 'package:tfg_app/src/providers/turn_provider.dart';
 import 'package:tfg_app/src/providers/user_provider.dart';
+import 'package:tfg_app/src/widgets/custom_box_decoration_widget.dart';
 
 class UserPage extends StatelessWidget {
+  final bool hasTurn = false;
+
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
+    return GetBuilder<UserHasTurnController>(
+      init: UserHasTurnController(),
+      builder: (controller) => Scaffold(
         appBar: AppBar(
-          flexibleSpace: Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Colors.green, Colors.lightGreen],
-                begin: FractionalOffset(0.0, 0.0),
-                end: FractionalOffset(1.0, 0.0),
-                stops: [0.0, 1.0],
-                tileMode: TileMode.clamp,
-              ),
-            ),
+          elevation: 0,
+          flexibleSpace: CustomBoxDecoration(
+            color1: Colors.lightGreen,
+            color2: Colors.green,
           ),
           title: Text(
             SupermarketApp.sharedPreferences.getString(SupermarketApp.userEmail),
@@ -31,53 +34,56 @@ class UserPage extends StatelessWidget {
             )
           ],
         ),
-        body: _userScreen(context),
+        body: _userScreen(controller),
       ),
     );
   }
 
-  Widget _userScreen(BuildContext context) {
+  Widget _userScreen(UserHasTurnController controller) {
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [Colors.green, Colors.lightGreen],
-          begin: Alignment.topRight,
-          end: Alignment.bottomLeft,
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
         ),
       ),
       child: Padding(
         padding: EdgeInsets.all(15.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [_takeTurn(context), _products(context)],
+          children: [_takeTurn(controller), _products()],
         ),
       ),
     );
   }
 
-  Widget _takeTurn(BuildContext context) {
-    String _text = 'Pedir turno';
-    String _route = 'userTurn';
-
-    return _boxButton(context, _text, _route);
+  Widget _takeTurn(UserHasTurnController controller) {
+    return Obx(() {
+      if (controller.hasTurn.value) {
+        return _boxButton('Ver turno', 'userTurn');
+      } else {
+        return _boxButton('Pedir turno', '');
+      }
+    });
   }
 
-  Widget _products(BuildContext context) {
+  Widget _products() {
     String _text = 'Ver productos';
     String _route = 'products';
 
-    return _boxButton(context, _text, _route);
+    return _boxButton(_text, _route);
   }
 
-  Widget _boxButton(BuildContext context, String text, String route) {
+  Widget _boxButton(String text, String route) {
     return Expanded(
       child: Padding(
         padding: EdgeInsets.all(15.0),
         child: InkWell(
-          onTap: () => Navigator.pushNamed(context, route),
+          onTap: () => (route == '') ? _readQR('userTurn') : Get.toNamed(route),
           child: Container(
             margin: EdgeInsets.symmetric(vertical: 10.0),
-            padding: EdgeInsets.symmetric(vertical: 50.0),
+            padding: EdgeInsets.all(20.0),
             decoration: BoxDecoration(
               color: Color(0xFF97f48a),
               borderRadius: BorderRadius.circular(7.0),
@@ -100,13 +106,16 @@ class UserPage extends StatelessWidget {
   }
 
   Widget _textShow(String text) {
-    return FittedBox(
-      child: Text(
-        text,
-        textAlign: TextAlign.center,
-        overflow: TextOverflow.ellipsis,
-        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 48.0, color: Color(0xFF3f4756)),
-      ),
+    return AutoSizeText(
+      text,
+      textAlign: TextAlign.center,
+      style: TextStyle(fontSize: 58, fontWeight: FontWeight.bold, color: Color(0xFF3f4756)),
+      maxLines: 1,
     );
+  }
+
+  Future<void> _readQR(String route) async {
+    bool _isScanDB = await TurnProvider().readQR();
+    (_isScanDB) ? Get.toNamed(route) : print('¡QR no valido!');
   }
 }
