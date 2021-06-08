@@ -7,8 +7,11 @@ import 'package:get/get.dart';
 import 'package:tfg_app/src/models/product_model.dart';
 
 class ListProductController extends GetxController {
-  final _productsRealTimeDB =
-      FirebaseDatabase.instance.reference().child('productos').child('charcuteria');
+  final _productsRealTimeDB = FirebaseDatabase.instance
+      .reference()
+      .child('codigo_supermercado')
+      .child('productos')
+      .child('charcuteria');
 
   StreamSubscription<Event> listener;
   RxList<ProductModel> productList = <ProductModel>[].obs;

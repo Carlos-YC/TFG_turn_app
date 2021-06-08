@@ -65,7 +65,7 @@ class _UserTurnPageState extends State<UserTurnPage> {
                       children: [
                         Text(
                           'Turno de charcutería',
-                          style: TextStyle(fontSize: 30.0, fontWeight: FontWeight.bold),
+                          style: TextStyle(fontSize: 28.0, fontWeight: FontWeight.bold),
                         ),
                         SizedBox(
                           height: 20.0,
@@ -82,10 +82,11 @@ class _UserTurnPageState extends State<UserTurnPage> {
                               _turnInfoText(
                                   Icons.confirmation_num_outlined,
                                   'Tu turno: ${controller.turnUserInfo[0]['tu_num'].toString()}',
-                                  26.0),
+                                  24.0),
                               _turnInfoText(Icons.people,
-                                  'Clientes por delante: ${controller.numUsers.toString()}', 20.0),
-                              _turnInfoText(Icons.access_time, 'Tiempo de espera aprox.: -', 20.0),
+                                  'Clientes por delante: ${controller.numUsers.toString()}', 18.0),
+                              _turnInfoText(Icons.access_time, 'Tiempo de espera:', 18.0),
+                              _turnInfoText(null, '15 min aprox.', 18.0),
                             ],
                           ),
                         ),

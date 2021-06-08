@@ -37,6 +37,7 @@ class _ProductDetailsState extends State<ProductDetails> {
     return Container(
       child: Column(
         children: [
+          SizedBox(height: 20.0),
           _topInfo(context, product),
           SizedBox(height: 20.0),
           _bottomInfo(product),
@@ -81,7 +82,7 @@ class _ProductDetailsState extends State<ProductDetails> {
         _buttonExpanded('Ingredientes', 1, product),
         _buttonExpanded('Alergenos', 2, product),
         _buttonExpanded('Inf. Nutricional (100g)', 3, product),
-        _buttonExpanded('Más Inf.', 4,  product),
+        _buttonExpanded('Más Inf.', 4, product),
       ],
     );
   }
@@ -103,24 +104,34 @@ class _ProductDetailsState extends State<ProductDetails> {
       double discountPrice = product.precioKg - (product.precioKg * (product.descuento / 100));
       return Column(
         children: [
-          Row(
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text(
-                '${product.precioKg.toStringAsFixed(2)} €/Kg',
-                style: TextStyle(
-                  fontSize: 14.0,
-                  fontWeight: FontWeight.bold,
-                  decoration: TextDecoration.lineThrough,
-                  decorationThickness: 2.5,
-                ),
+              Row(
+                children: [
+                  Text(
+                    '${product.precioKg.toStringAsFixed(2)} €/Kg',
+                    style: TextStyle(
+                      fontSize: 14.0,
+                      fontWeight: FontWeight.bold,
+                      decoration: TextDecoration.lineThrough,
+                      decorationThickness: 2.5,
+                    ),
+                  ),
+                  SizedBox(width: 8.0),
+                  Text(
+                    '${product.descuento}%',
+                    style:
+                        TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold, color: Colors.red),
+                  ),
+                ],
               ),
-              SizedBox(width: 15.0),
               Text(
                 '${discountPrice.toStringAsFixed(2)} €/Kg',
                 style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold, color: Colors.red),
               ),
             ],
-          ),
+          )
         ],
       );
     } else {
@@ -200,11 +211,11 @@ class _ProductDetailsState extends State<ProductDetails> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          _infoText('Marca: ', product.marca),
+          if (product.marca != null) _infoText('Marca: ', product.marca),
           SizedBox(height: 10.0),
-          _infoText('Proveedor: ', product.proveedor),
+          if (product.proveedor != null) _infoText('Proveedor: ', product.proveedor),
           SizedBox(height: 10.0),
-          _infoText('Origen: ', product.origen),
+          if (product.origen != null) _infoText('Origen: ', product.origen),
         ],
       ),
     );
@@ -213,9 +224,11 @@ class _ProductDetailsState extends State<ProductDetails> {
   TableRow _tableRow(String title, String info) {
     return TableRow(children: [
       TableCell(
-          child: Padding(
-              padding: EdgeInsets.all(3),
-              child: Text(title, style: TextStyle(fontWeight: FontWeight.bold)))),
+        child: Padding(
+          padding: EdgeInsets.all(3),
+          child: Text(title, style: TextStyle(fontWeight: FontWeight.bold)),
+        ),
+      ),
       TableCell(child: Center(child: Container(child: Text(info)))),
     ]);
   }
