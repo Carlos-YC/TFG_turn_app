@@ -99,24 +99,7 @@ class _ProductsPageState extends State<ProductsPage> {
   Widget _productInfo(ProductModel product) {
     return Column(
       children: [
-        FractionalTranslation(
-          translation: Offset(0, -0.5),
-          child: Container(
-            width: 90,
-            height: 40,
-            child: Center(
-              child: Text(
-                '${product.precioKg.toStringAsFixed(2)} €/Kg',
-                style: TextStyle(fontSize: 14, color: Colors.white, fontWeight: FontWeight.bold),
-              ),
-            ),
-            decoration: BoxDecoration(
-              color: Colors.green,
-              borderRadius: BorderRadius.circular(30),
-              border: Border.all(width: 3, color: Colors.white),
-            ),
-          ),
-        ),
+        _hasDiscount(product),
         FractionalTranslation(
           translation: Offset(0, -0.5),
           child: Text(
@@ -129,5 +112,48 @@ class _ProductsPageState extends State<ProductsPage> {
         )
       ],
     );
+  }
+
+  Widget _hasDiscount(ProductModel product) {
+    if (product.oferta && product.descuento > 0) {
+      double discountPrice = product.precioKg - (product.precioKg * (product.descuento / 100));
+      return FractionalTranslation(
+        translation: Offset(0, -0.5),
+        child: Container(
+          width: 130,
+          height: 40,
+          child: Center(
+            child: Text(
+              '${discountPrice.toStringAsFixed(2)} €/Kg',
+              style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
+            ),
+          ),
+          decoration: BoxDecoration(
+            color: Colors.green[800],
+            borderRadius: BorderRadius.circular(30),
+            border: Border.all(width: 4, color: Colors.red[800]),
+          ),
+        ),
+      );
+    } else {
+      return FractionalTranslation(
+        translation: Offset(0, -0.5),
+        child: Container(
+          width: 90,
+          height: 40,
+          child: Center(
+            child: Text(
+              '${product.precioKg.toStringAsFixed(2)} €/Kg',
+              style: TextStyle(fontSize: 14, color: Colors.white, fontWeight: FontWeight.bold),
+            ),
+          ),
+          decoration: BoxDecoration(
+            color: Colors.green,
+            borderRadius: BorderRadius.circular(30),
+            border: Border.all(width: 3, color: Colors.white),
+          ),
+        ),
+      );
+    }
   }
 }

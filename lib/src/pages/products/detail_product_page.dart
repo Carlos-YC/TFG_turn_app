@@ -48,7 +48,7 @@ class _ProductDetailsState extends State<ProductDetails> {
 
   Widget _topInfo(BuildContext context, ProductModel product) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 20.0),
+      padding: EdgeInsets.symmetric(horizontal: 10.0),
       child: Row(
         children: [
           Hero(
@@ -58,17 +58,24 @@ class _ProductDetailsState extends State<ProductDetails> {
               child: _checkUrl(product.imagenUrl),
             ),
           ),
-          SizedBox(width: 30.0),
+          SizedBox(width: 10.0),
           Flexible(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(product.nombre, style: Theme.of(context).textTheme.headline6),
-                SizedBox(height: 10.0),
-                Text(product.marca, style: Theme.of(context).textTheme.subtitle2),
-                SizedBox(height: 5.0),
-                _productPrice(product)
-              ],
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(15.0),
+              child: Container(
+                color: Colors.teal,
+                padding: EdgeInsets.all(15.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(product.nombre, style: Theme.of(context).textTheme.headline6),
+                    SizedBox(height: 10.0),
+                    Text(product.marca, style: Theme.of(context).textTheme.subtitle2),
+                    SizedBox(height: 5.0),
+                    _productPrice(product)
+                  ],
+                ),
+              ),
             ),
           ),
         ],
@@ -77,10 +84,19 @@ class _ProductDetailsState extends State<ProductDetails> {
   }
 
   Widget _bottomInfo(ProductModel product) {
+    bool ingredientesEmpty = false;
+    bool alergenosEmpty = false;
+    if (product.ingredientes.length == 1 || product.alergenos == null) {
+      alergenosEmpty = product.ingredientes[0].isBlank;
+    }
+    if (product.alergenos.length == 1 || product.alergenos == null) {
+      alergenosEmpty = product.alergenos[0].isBlank;
+    }
+
     return Column(
       children: [
-        _buttonExpanded('Ingredientes', 1, product),
-        _buttonExpanded('Alergenos', 2, product),
+        ingredientesEmpty ? Container() : _buttonExpanded('Ingredientes', 1, product),
+        alergenosEmpty ? Container() : _buttonExpanded('Alergenos', 2, product),
         _buttonExpanded('Inf. Nutricional (100g)', 3, product),
         _buttonExpanded('Más Inf.', 4, product),
       ],
@@ -88,14 +104,17 @@ class _ProductDetailsState extends State<ProductDetails> {
   }
 
   Widget _checkUrl(String imgUrl) {
-    return Image.network(
-      imgUrl,
-      height: 150.0,
-      width: 150.0,
-      fit: BoxFit.cover,
-      errorBuilder: (BuildContext context, Object exception, StackTrace stackTrace) {
-        return Icon(Icons.image, size: 48.0);
-      },
+    return Container(
+      color: Colors.white,
+      child: Image.network(
+        imgUrl,
+        height: 150.0,
+        width: 150.0,
+        fit: BoxFit.cover,
+        errorBuilder: (BuildContext context, Object exception, StackTrace stackTrace) {
+          return Icon(Icons.image, size: 48.0);
+        },
+      ),
     );
   }
 
@@ -122,13 +141,13 @@ class _ProductDetailsState extends State<ProductDetails> {
                   Text(
                     '${product.descuento}%',
                     style:
-                        TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold, color: Colors.red),
+                        TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold, color: Colors.red[800]),
                   ),
                 ],
               ),
               Text(
                 '${discountPrice.toStringAsFixed(2)} €/Kg',
-                style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold, color: Colors.red),
+                style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold, color: Colors.red[800]),
               ),
             ],
           )
