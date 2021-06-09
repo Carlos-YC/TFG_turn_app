@@ -48,7 +48,7 @@ class _InitPageState extends State<InitPage> {
             children: [
               Image.asset('assets/images/init_img.png'),
               SizedBox(height: 20.0),
-              Text('Tu turno app', style: TextStyle(color: Colors.white, fontSize: 24.0))
+              Text('Turn app', style: TextStyle(color: Colors.white, fontSize: 28.0))
             ],
           ),
         ),

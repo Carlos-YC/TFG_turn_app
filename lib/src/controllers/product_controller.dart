@@ -30,9 +30,9 @@ class ListProductController extends GetxController {
 
   void getProductsRealTime() {
     this.listener = _productsRealTimeDB.onValue.listen((event) {
-      this.productList.clear();
       final _products = event.snapshot.value;
       if (_products != null) {
+      this.productList.clear();
         _products.forEach((key, value) {
           this.productList.add(ProductModel.fromJson(jsonEncode(value)));
         });

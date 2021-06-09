@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:firebase_database/firebase_database.dart';
 
 import 'package:tfg_app/src/config/config.dart';
+import 'package:tfg_app/src/providers/push_notification_provider.dart';
 import 'package:tfg_app/src/providers/turn_provider.dart';
 
 final _turnRealTimeDB = FirebaseDatabase.instance
@@ -32,11 +33,7 @@ class UserHasTurnController extends GetxController {
   void hasTurnRealTimeDB() {
     var _userLogged = _turnRealTimeDB.orderByChild('id_usuario').equalTo(_uid);
     this.listener = _userLogged.onValue.listen((event) {
-      if (event.snapshot.value != null) {
-        this.hasTurn.value = true;
-      } else {
-        this.hasTurn.value = false;
-      }
+      (event.snapshot.value != null) ? this.hasTurn.value = true : this.hasTurn.value = false;
     });
   }
 }
@@ -129,5 +126,44 @@ class AdminTurnController extends GetxController {
     if (firstUserNumber.value > 0 && lastUserNumber.value > 0) {
       this.allUsers.value = this.lastUserNumber.value - this.firstUserNumber.value;
     }
+  }
+}
+
+class AdminSendNotificationController extends GetxController {
+  StreamSubscription<Event> callUser;
+  String token;
+  RxInt length = RxInt(0);
+  RxBool hasApp = RxBool(false);
+
+  @override
+  void onReady() {
+    this.thirdUserInfoRealTimeDB();
+    super.onReady();
+  }
+
+  @override
+  void onClose() {
+    this.callUser.cancel();
+    super.onClose();
+  }
+
+  void thirdUserInfoRealTimeDB() {
+    var _userInfo = _turnRealTimeDB.orderByKey().limitToFirst(3);
+    this.callUser = _userInfo.onValue.listen((event) async {
+      final _userData = event.snapshot.value;
+      this.length.value = _userData.length;
+      if (_userData != null && _userData.length == 3) {
+        _userData.forEach((key, value) {
+          if (value['app']) {
+            token = value['token'];
+            this.hasApp.value = true;
+          } else {
+            this.hasApp.value = false;
+          }
+        });
+        print(token);
+        await PushNotificationProvider().sendPostNotification(token);
+      }
+    });
   }
 }

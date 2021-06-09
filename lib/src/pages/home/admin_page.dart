@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:tfg_app/src/controllers/turn_controller.dart';
 
 import 'package:tfg_app/src/providers/user_provider.dart';
 import 'package:tfg_app/src/widgets/custom_box_decoration_widget.dart';
@@ -9,27 +10,30 @@ import 'package:tfg_app/src/widgets/custom_box_decoration_widget.dart';
 class AdminPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        flexibleSpace: CustomBoxDecoration(
-          color1: Colors.lightBlueAccent,
-          color2: Colors.blue,
+    return GetBuilder<AdminSendNotificationController>(
+      init: AdminSendNotificationController(),
+      builder: (controller) => Scaffold(
+        appBar: AppBar(
+          elevation: 0,
+          flexibleSpace: CustomBoxDecoration(
+            color1: Colors.lightBlueAccent,
+            color2: Colors.blue,
+          ),
+          title: Text('Sesión de administrador',
+              style: TextStyle(color: Colors.white, fontSize: 24.0)),
+          actions: [
+            IconButton(
+              icon: Icon(Icons.logout),
+              onPressed: () => UserProvider().logOut(context),
+            )
+          ],
         ),
-        title:
-            Text('Sesión de administrador', style: TextStyle(color: Colors.white, fontSize: 24.0)),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.logout),
-            onPressed: () => UserProvider().logOut(context),
-          )
-        ],
+        body: _adminScreen(controller),
       ),
-      body: _adminScreen(),
     );
   }
 
-  Widget _adminScreen() {
+  Widget _adminScreen(AdminSendNotificationController controller) {
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(

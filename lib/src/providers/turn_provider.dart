@@ -2,6 +2,7 @@ import 'package:flutter/services.dart';
 
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 import 'package:tfg_app/src/config/config.dart';
 
@@ -45,6 +46,7 @@ class TurnProvider {
     DateTime _timeNow = new DateTime.now();
     int _lastNumber;
     int _setNumber;
+    String _token = await FirebaseMessaging.instance.getToken();
 
     await _lastKeyRef.once().then((DataSnapshot snapshot) {
       if (snapshot.value != null) {
@@ -62,6 +64,7 @@ class TurnProvider {
           'fecha': _timeNow.toString(),
           'num': _lastNumber,
           'tu_num': _setNumber,
+          'token': _token,
         });
       } else {
         _turnRef.child('charcuteria_1').set({
@@ -70,6 +73,7 @@ class TurnProvider {
           'fecha': _timeNow.toString(),
           'num': 1,
           'tu_num': 1,
+          'token': _token,
         });
       }
     });

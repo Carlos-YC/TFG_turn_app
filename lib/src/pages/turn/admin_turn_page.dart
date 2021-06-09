@@ -106,7 +106,7 @@ class AdminTurnPage extends StatelessWidget {
                 children: [
                   Icon(Icons.people, size: 80.0),
                   Text(
-                    '+ ${controller.allUsers.value.toString()}',
+                    '${controller.allUsers.value.toString()}',
                     style: TextStyle(fontSize: 42.0, fontWeight: FontWeight.bold),
                   ),
                 ],
@@ -144,8 +144,7 @@ class AdminTurnPage extends StatelessWidget {
                 'Siguiente turno',
                 textAlign: TextAlign.center,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                    fontWeight: FontWeight.bold, fontSize: 36.0, color: Colors.white),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 36.0, color: Colors.white),
               ),
             ),
           ),
