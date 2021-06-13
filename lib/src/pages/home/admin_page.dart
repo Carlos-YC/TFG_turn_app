@@ -28,12 +28,12 @@ class AdminPage extends StatelessWidget {
             )
           ],
         ),
-        body: _adminScreen(controller),
+        body: _adminScreen(),
       ),
     );
   }
 
-  Widget _adminScreen(AdminSendNotificationController controller) {
+  Widget _adminScreen() {
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(

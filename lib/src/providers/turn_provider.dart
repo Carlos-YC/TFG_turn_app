@@ -58,16 +58,36 @@ class TurnProvider {
 
         if (_setNumber > 99) _setNumber = 1;
 
-        _turnRef.child('charcuteria_$_lastNumber').set({
-          'app': true,
-          'id_usuario': _uid,
-          'fecha': _timeNow.toString(),
-          'num': _lastNumber,
-          'tu_num': _setNumber,
-          'token': _token,
-        });
+        if (_lastNumber < 10) {
+          _turnRef.child('charcuteria_00$_lastNumber').set({
+            'app': true,
+            'id_usuario': _uid,
+            'fecha': _timeNow.toString(),
+            'num': _lastNumber,
+            'tu_num': _setNumber,
+            'token': _token,
+          });
+        } else if (_lastNumber > 9 && _lastNumber < 100) {
+          _turnRef.child('charcuteria_0$_lastNumber').set({
+            'app': true,
+            'id_usuario': _uid,
+            'fecha': _timeNow.toString(),
+            'num': _lastNumber,
+            'tu_num': _setNumber,
+            'token': _token,
+          });
+        } else if (_lastNumber > 99) {
+          _turnRef.child('charcuteria_$_lastNumber').set({
+            'app': true,
+            'id_usuario': _uid,
+            'fecha': _timeNow.toString(),
+            'num': _lastNumber,
+            'tu_num': _setNumber,
+            'token': _token,
+          });
+        }
       } else {
-        _turnRef.child('charcuteria_1').set({
+        _turnRef.child('charcuteria_001').set({
           'app': true,
           'id_usuario': _uid,
           'fecha': _timeNow.toString(),

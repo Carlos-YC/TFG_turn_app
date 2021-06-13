@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:get/get_navigation/src/root/get_material_app.dart';
 
+import 'package:get/get.dart';
 import 'package:tfg_app/src/config/config.dart';
 
 import 'package:tfg_app/src/pages/init_page.dart';
@@ -54,23 +54,24 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: SupermarketApp.appName,
-        navigatorKey: navigatorKey,
-        home: InitPage(),
-        routes: {
-          'authentication': (BuildContext context) => SelectAuthenticationPage(),
-          'register': (BuildContext context) => RegisterPage(),
-          'login': (BuildContext context) => LoginPage(),
-          'adminPage': (BuildContext context) => AdminPage(),
-          'userPage': (BuildContext context) => UserPage(),
-          'userTurn': (BuildContext context) => UserTurnPage(),
-          'adminTurn': (BuildContext context) => AdminTurnPage(),
-          'products': (BuildContext context) => ProductsPage(),
-          'listProducts': (BuildContext context) => ListProductsPage(),
-          'detailsProduct': (BuildContext context) => ProductDetails(),
-        },
-        theme: ThemeData(
-            primaryColor: Colors.green, visualDensity: VisualDensity.adaptivePlatformDensity));
+      debugShowCheckedModeBanner: false,
+      title: SupermarketApp.appName,
+      navigatorKey: navigatorKey,
+      home: InitPage(),
+      routes: {
+        'authentication': (BuildContext context) => SelectAuthenticationPage(),
+        'register': (BuildContext context) => RegisterPage(),
+        'login': (BuildContext context) => LoginPage(),
+        'adminPage': (BuildContext context) => AdminPage(),
+        'userPage': (BuildContext context) => UserPage(),
+        'userTurn': (BuildContext context) => UserTurnPage(),
+        'adminTurn': (BuildContext context) => AdminTurnPage(),
+        'products': (BuildContext context) => ProductsPage(),
+        'listProducts': (BuildContext context) => ListProductsPage(),
+        'detailsProduct': (BuildContext context) => ProductDetails(),
+      },
+      theme: ThemeData(
+          primaryColor: Colors.green, visualDensity: VisualDensity.adaptivePlatformDensity),
+    );
   }
 }
