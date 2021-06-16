@@ -14,7 +14,7 @@ class ListProductsPage extends StatefulWidget {
 class _ListProductsPageState extends State<ListProductsPage> {
   RxList<ProductModel> _products;
   int _sortColumnIndex = 2;
-  bool _isAscending = false;
+  bool _isAscending = true;
 
   @override
   Widget build(BuildContext context) {

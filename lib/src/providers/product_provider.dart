@@ -14,7 +14,7 @@ class ProductProvider {
   
   Future<List<ProductModel>> productList() async {
     List<ProductModel> _productsList = [];
-    await _productsDB.orderByChild('tipo').once().then((DataSnapshot snapshot) {
+    await _productsDB.once().then((DataSnapshot snapshot) {
       if(snapshot.value != null) {
         final _products = snapshot.value;
         _productsList.clear();

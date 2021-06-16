@@ -7,42 +7,62 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:tfg_app/src/config/config.dart';
 
 class TurnProvider {
-  final String _uid = SupermarketApp.auth.currentUser.uid;
-  final _turnRef = FirebaseDatabase.instance
-      .reference()
-      .child('codigo_supermercado')
-      .child('cola_espera')
-      .child('charcuteria');
+  String _marketId;
+  String _adminService;
+  String _uid;
+
+  TurnProvider() {
+    this._marketId = SupermarketApp.sharedPreferences.getString(SupermarketApp.marketId);
+    this._adminService = SupermarketApp.sharedPreferences.getString(SupermarketApp.service);
+    this._uid = SupermarketApp.auth.currentUser.uid;
+  }
 
   Future<bool> readQR() async {
     bool _isScanDB;
     String _qrScan;
+
     try {
       _qrScan = await FlutterBarcodeScanner.scanBarcode('#3D8BEF', 'Cancelar', false, ScanMode.QR);
     } on PlatformException {
       _qrScan = 'Se ha producido un error';
     }
-    (_qrScan != '-1') ? _isScanDB = _qrService(_qrScan) : _isScanDB = false;
-    if (_isScanDB) await createTurn();
+
+    (_qrScan != '-1') ? _isScanDB = await isSupermarket(_qrScan) : _isScanDB = false;
     return _isScanDB;
   }
 
-  bool _qrService(String qrScan) {
+  Future<bool> isSupermarket(String qrScan) async {
     var _arr = qrScan.split(',');
-    switch (_arr[1]) {
-      case 'charcuteria':
-        return true;
-      case 'pescaderia':
-        return true;
-      case 'carniceria':
-        return true;
-      default:
-        return false;
+    final _refDB = FirebaseDatabase.instance.reference();
+
+    final response1 = await _refDB.orderByKey().equalTo(_arr[0]).once();
+    if (response1.value != null) {
+      final response2 = await _refDB.child(_arr[0]).child('servicios').once();
+      if (response2.value != null) {
+        List<String> servicesList = response2.value.split(',');
+        if (servicesList.contains(_arr[1])) {
+          var setMarketId =
+              await SupermarketApp.sharedPreferences.setString(SupermarketApp.marketId, _arr[0]);
+          await createTurn(_arr[0], _arr[1]);
+          if (setMarketId) {
+            return true;
+          } else {
+            return false;
+          }
+        }
+      }
     }
+    return false;
   }
 
-  Future<void> createTurn() async {
-    var _lastKeyRef = _turnRef.orderByChild('num').limitToLast(1);
+  Future<void> createTurn(String supermarketId, String service) async {
+    var _refDB = FirebaseDatabase.instance
+        .reference()
+        .child(supermarketId)
+        .child('cola_espera')
+        .child(service);
+    var _lastKeyRef = _refDB.orderByChild('num').limitToLast(1);
+
     DateTime _timeNow = new DateTime.now();
     int _lastNumber;
     int _setNumber;
@@ -59,7 +79,7 @@ class TurnProvider {
         if (_setNumber > 99) _setNumber = 1;
 
         if (_lastNumber < 10) {
-          _turnRef.child('charcuteria_00$_lastNumber').set({
+          _refDB.child('charcuteria_00$_lastNumber').set({
             'app': true,
             'id_usuario': _uid,
             'fecha': _timeNow.toString(),
@@ -68,7 +88,7 @@ class TurnProvider {
             'token': _token,
           });
         } else if (_lastNumber > 9 && _lastNumber < 100) {
-          _turnRef.child('charcuteria_0$_lastNumber').set({
+          _refDB.child('charcuteria_0$_lastNumber').set({
             'app': true,
             'id_usuario': _uid,
             'fecha': _timeNow.toString(),
@@ -77,7 +97,7 @@ class TurnProvider {
             'token': _token,
           });
         } else if (_lastNumber > 99) {
-          _turnRef.child('charcuteria_$_lastNumber').set({
+          _refDB.child('charcuteria_$_lastNumber').set({
             'app': true,
             'id_usuario': _uid,
             'fecha': _timeNow.toString(),
@@ -87,7 +107,7 @@ class TurnProvider {
           });
         }
       } else {
-        _turnRef.child('charcuteria_001').set({
+        _refDB.child('charcuteria_001').set({
           'app': true,
           'id_usuario': _uid,
           'fecha': _timeNow.toString(),
@@ -101,7 +121,13 @@ class TurnProvider {
 
   Future<List> getUserTurnInfo() async {
     List turnUserInfo = [];
-    var _userLogged = _turnRef.orderByChild('id_usuario').equalTo(_uid);
+    var _refDB = FirebaseDatabase.instance
+        .reference()
+        .child(_marketId)
+        .child('cola_espera')
+        .child('charcuteria');
+    var _userLogged = _refDB.orderByChild('id_usuario').equalTo(_uid);
+
     await _userLogged.once().then((DataSnapshot snapshot) {
       if (snapshot.value != null) {
         turnUserInfo.clear();
@@ -116,7 +142,13 @@ class TurnProvider {
 
   Future<int> getClientTurnNumber() async {
     int turnUserNumber;
-    var _userLogged = _turnRef.orderByChild('num').limitToFirst(1);
+    var _refDB = FirebaseDatabase.instance
+        .reference()
+        .child(_marketId)
+        .child('cola_espera')
+        .child('charcuteria');
+    var _userLogged = _refDB.orderByChild('num').limitToFirst(1);
+
     await _userLogged.once().then((DataSnapshot snapshot) {
       if (snapshot.value != null) {
         Map<dynamic, dynamic> _values = snapshot.value;
@@ -129,10 +161,16 @@ class TurnProvider {
   }
 
   Future<void> nextTurn() async {
-    await _turnRef.limitToFirst(1).once().then((event) async {
+    var _refDB = FirebaseDatabase.instance
+        .reference()
+        .child(_marketId)
+        .child('cola_espera')
+        .child(_adminService);
+
+    await _refDB.limitToFirst(1).once().then((event) async {
       Map map = event.value;
       String keyToDelete = map.keys.toList()[0].toString();
-      await _turnRef
+      await _refDB
           .child(keyToDelete)
           .remove()
           .then((_) => print('$keyToDelete se borró correctamente'));
@@ -140,14 +178,22 @@ class TurnProvider {
   }
 
   Future<void> cancelTurn() async {
-    var _userLogged = _turnRef.orderByChild('id_usuario').equalTo(_uid);
+    var _refDB = FirebaseDatabase.instance
+        .reference()
+        .child(_marketId)
+        .child('cola_espera')
+        .child('charcuteria');
+    var _userLogged = _refDB.orderByChild('id_usuario').equalTo(_uid);
+
     await _userLogged.once().then((event) async {
-      Map map = event.value;
-      String keyToDelete = map.keys.toList()[0].toString();
-      await _turnRef
-          .child(keyToDelete)
-          .remove()
-          .then((_) => print('$keyToDelete se borró correctamente'));
+      if (event.value != null) {
+        Map map = event.value;
+        String keyToDelete = map.keys.toList()[0].toString();
+        await _refDB.child(keyToDelete).remove().then((_) async {
+          await SupermarketApp.sharedPreferences.setString(SupermarketApp.marketId, 'marketid');
+          print('$keyToDelete se borró correctamente');
+        });
+      }
     });
   }
 }

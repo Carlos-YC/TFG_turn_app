@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
-import 'package:tfg_app/src/controllers/turn_controller.dart';
+import 'package:tfg_app/src/controllers/turn/turn_user_info_controller.dart';
 import 'package:tfg_app/src/providers/turn_provider.dart';
 import 'package:tfg_app/src/widgets/custom_box_decoration_widget.dart';
 
@@ -126,10 +126,31 @@ class _UserTurnPageState extends State<UserTurnPage> {
 
   Widget _cancelButton() {
     return ElevatedButton(
-      onPressed: () {
-        TurnProvider().cancelTurn();
-        Get.offNamed('userPage');
-      },
+      onPressed: () => showDialog<String>(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+          title: Text('Cancelar turno'),
+          content: Text('¿Seguro que quiere cancelar su turno?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                TurnProvider().cancelTurn();
+                Get.offAllNamed('userPage');
+              },
+              child: Text('Confirmar'),
+              style: TextButton.styleFrom(primary: Colors.green),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(context, 'Cancelar'),
+              child: Text('Cancelar'),
+              style: TextButton.styleFrom(primary: Colors.red),
+            )
+          ],
+        ),
+      ),
+      // TurnProvider().cancelTurn();
+      // Get.back();
+
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 20.0),
         child: Text(

@@ -38,7 +38,6 @@ dependencies:
   get: ^4.1.4
   google_fonts: ^2.1.0
   shared_preferences: ^2.0.6
-  sizer: ^2.0.13          #Interesante, se puede investigar
 
 dev_dependencies:
   flutter_test:

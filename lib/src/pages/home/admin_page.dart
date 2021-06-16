@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:tfg_app/src/controllers/turn_controller.dart';
 
+import 'package:tfg_app/src/controllers/turn/admin_send_notification_controller.dart';
 import 'package:tfg_app/src/providers/user_provider.dart';
 import 'package:tfg_app/src/widgets/custom_box_decoration_widget.dart';
 

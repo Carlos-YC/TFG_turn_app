@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import 'package:tfg_app/src/controllers/turn_controller.dart';
+import 'package:tfg_app/src/controllers/turn/admin_turn_controller.dart';
 import 'package:tfg_app/src/providers/turn_provider.dart';
 import 'package:tfg_app/src/widgets/custom_box_decoration_widget.dart';
 

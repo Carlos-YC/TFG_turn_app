@@ -4,7 +4,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:get/get.dart';
 
 import 'package:tfg_app/src/config/config.dart';
-import 'package:tfg_app/src/controllers/turn_controller.dart';
+import 'package:tfg_app/src/controllers/turn/user_has_turn_controller.dart';
 import 'package:tfg_app/src/providers/turn_provider.dart';
 import 'package:tfg_app/src/providers/user_provider.dart';
 import 'package:tfg_app/src/widgets/custom_box_decoration_widget.dart';
