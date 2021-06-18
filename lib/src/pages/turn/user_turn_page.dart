@@ -148,9 +148,6 @@ class _UserTurnPageState extends State<UserTurnPage> {
           ],
         ),
       ),
-      // TurnProvider().cancelTurn();
-      // Get.back();
-
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 20.0),
         child: Text(
