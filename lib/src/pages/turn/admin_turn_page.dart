@@ -16,10 +16,12 @@ class AdminTurnPage extends StatefulWidget {
 class _AdminTurnPageState extends State<AdminTurnPage> {
   final String _adminService = SupermarketApp.sharedPreferences.getString(SupermarketApp.service);
   Timer _timer;
+  int _counter = 0;
   int _counterSec = 0;
   int _counterMin = 0;
 
   void _startTimer() {
+    _counter = 0;
     _counterSec = 0;
     _counterMin = 0;
     if (_timer != null) {
@@ -28,6 +30,7 @@ class _AdminTurnPageState extends State<AdminTurnPage> {
     if (mounted) {
       _timer = Timer.periodic(Duration(seconds: 1), (timer) {
         setState(() {
+          _counter++;
           if (_counterSec < 59) {
             _counterSec++;
           } else {

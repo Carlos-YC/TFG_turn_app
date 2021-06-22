@@ -5,12 +5,9 @@ import 'package:tfg_app/src/models/product_model.dart';
 import 'package:tfg_app/src/providers/product_provider.dart';
 import 'package:tfg_app/src/widgets/custom_box_decoration_widget.dart';
 
-class ProductsPage extends StatefulWidget {
-  @override
-  _ProductsPageState createState() => _ProductsPageState();
-}
+class ProductsPage extends StatelessWidget {
+  final String service = Get.arguments;
 
-class _ProductsPageState extends State<ProductsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,7 +19,15 @@ class _ProductsPageState extends State<ProductsPage> {
           color2: Colors.green,
         ),
         title: Text(
-          'Productos',
+          (() {
+            if (service == 'carniceria') {
+              return 'Carnicería';
+            } else if (service == 'charcuteria') {
+              return 'Charcutería';
+            } else if (service == 'pescaderia') {
+              return 'Pescadería';
+            }
+          }()),
           style: TextStyle(color: Colors.white, fontSize: 24.0),
         ),
       ),
@@ -32,10 +37,16 @@ class _ProductsPageState extends State<ProductsPage> {
 
   Widget _productsTable() {
     return FutureBuilder(
-      future: ProductProvider().productList(),
+      future: ProductProvider().productList(service),
       builder: (BuildContext context, AsyncSnapshot<List<ProductModel>> snapshot) {
         if (!snapshot.hasData) {
-          return Center(child: CircularProgressIndicator());
+          return Center(
+            child: Text(
+              'No hay productos disponibles para ver',
+              style: TextStyle(fontSize: 28),
+              textAlign: TextAlign.center,
+            ),
+          );
         } else {
           List<Widget> listProducts = [];
           snapshot.data.map((product) {

@@ -20,7 +20,7 @@ class UserProvider {
 
     if (user != null) {
       await _saveUserInfo(user).then((value) {
-        Get.offAllNamed('userPage');
+        Get.offAllNamed('selectSupermarket');
       });
     }
   }
@@ -71,7 +71,7 @@ class UserProvider {
         await SupermarketApp.sharedPreferences
             .setStringList(SupermarketApp.userCartList, _cartList);
 
-        Get.offAllNamed('userPage');
+        Get.offAllNamed('selectSupermarket');
       } else {
         userDatabaseReference
             .child('admins')

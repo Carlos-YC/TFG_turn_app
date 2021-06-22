@@ -11,6 +11,8 @@ class InitPage extends StatefulWidget {
 }
 
 class _InitPageState extends State<InitPage> {
+  String supermarketId = SupermarketApp.sharedPreferences.getString(SupermarketApp.marketId);
+
   @override
   void initState() {
     super.initState();
@@ -21,10 +23,18 @@ class _InitPageState extends State<InitPage> {
   displayInit() {
     Timer(Duration(seconds: 5), () async {
       if (SupermarketApp.auth.currentUser == null) {
-        Get.offNamed('authentication');
+        Get.offAllNamed('authentication');
       } else {
         bool isAdmin = await UserProvider().isAdminLogged();
-        isAdmin ? Get.offNamed('adminPage') : Get.offNamed('userPage');
+        if(isAdmin) {
+          Get.offAllNamed('adminPage');
+        } else {
+          if(supermarketId != 'marketid' && supermarketId != null) {
+            Get.offAllNamed('userPage');
+          } else {
+            Get.offAllNamed('selectSupermarket');
+          }
+        }
       }
     });
   }

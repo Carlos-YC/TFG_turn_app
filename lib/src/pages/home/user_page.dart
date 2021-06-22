@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:get/get.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 import 'package:tfg_app/src/config/config.dart';
+
 import 'package:tfg_app/src/controllers/turn/user_has_turn_controller.dart';
-import 'package:tfg_app/src/providers/turn_provider.dart';
+import 'package:tfg_app/src/providers/select_supermarket_provider.dart';
 import 'package:tfg_app/src/providers/user_provider.dart';
+
 import 'package:tfg_app/src/widgets/custom_box_decoration_widget.dart';
 
 class UserPage extends StatelessWidget {
@@ -52,7 +54,7 @@ class UserPage extends StatelessWidget {
         padding: EdgeInsets.all(15.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [_takeTurn(controller), _products()],
+          children: [_takeTurn(controller), _products(), _buttonOut()],
         ),
       ),
     );
@@ -63,14 +65,14 @@ class UserPage extends StatelessWidget {
       if (controller.hasTurn.value) {
         return _boxButton('Ver turno', 'userTurn');
       } else {
-        return _boxButton('Pedir turno', '');
+        return _boxButton('Pedir turno', 'selectServiceTurn');
       }
     });
   }
 
   Widget _products() {
     String _text = 'Ver productos';
-    String _route = 'products';
+    String _route = 'selectService';
 
     return _boxButton(_text, _route);
   }
@@ -80,7 +82,7 @@ class UserPage extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.all(15.0),
         child: InkWell(
-          onTap: () => (route == '') ? _readQR('userTurn') : Get.toNamed(route),
+          onTap: () => Get.toNamed(route),
           child: Container(
             margin: EdgeInsets.symmetric(vertical: 10.0),
             padding: EdgeInsets.all(20.0),
@@ -97,7 +99,7 @@ class UserPage extends StatelessWidget {
               ],
             ),
             child: Center(
-              child: _textShow(text),
+              child: _textShow(text, 0xFF3f4756),
             ),
           ),
         ),
@@ -105,17 +107,37 @@ class UserPage extends StatelessWidget {
     );
   }
 
-  Widget _textShow(String text) {
+  Widget _textShow(String text, int color) {
     return AutoSizeText(
       text,
       textAlign: TextAlign.center,
-      style: TextStyle(fontSize: 58, fontWeight: FontWeight.bold, color: Color(0xFF3f4756)),
+      style: TextStyle(fontSize: 58, fontWeight: FontWeight.bold, color: Color(color)),
       maxLines: 1,
     );
   }
 
-  Future<void> _readQR(String route) async {
-    bool _isScanDB = await TurnProvider().readQR();
-    (_isScanDB) ? Get.toNamed(route) : print('¡QR no valido!');
+  Widget _buttonOut() {
+    return Padding(
+      padding: EdgeInsets.fromLTRB(30, 0, 30, 30),
+      child: InkWell(
+        onTap: () => _supermarketOut(),
+        child: Container(
+          margin: EdgeInsets.symmetric(vertical: 10.0),
+          padding: EdgeInsets.all(20.0),
+          decoration: BoxDecoration(
+            color: Colors.red,
+            borderRadius: BorderRadius.circular(50.0),
+          ),
+          child: Center(
+            child: _textShow('Salir del supermercado', 0xFFFFFFFF),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _supermarketOut() async {
+    await SupermarketProvider().logoutSupermarket();
+    Get.offAllNamed('selectSupermarket');
   }
 }
