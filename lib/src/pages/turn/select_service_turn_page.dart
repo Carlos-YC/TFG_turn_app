@@ -22,7 +22,7 @@ class SelectServiceTurnPage extends StatelessWidget {
           color2: Colors.green,
         ),
         title: Text(
-          'Seleccionar turno',
+          'Pedir turno',
           style: TextStyle(color: Colors.white, fontSize: 24.0),
         ),
       ),
@@ -68,18 +68,18 @@ class SelectServiceTurnPage extends StatelessWidget {
   Widget _boxButton(String text) {
     return Center(
       child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.0),
+        padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 40.0),
         child: InkWell(
           onTap: () {
             if (text == 'carniceria') {
               TurnProvider().createTurn(supermarketID, 'carniceria');
-              Get.toNamed('userTurn', arguments: 'carniceria');
+              Get.toNamed('userTurn');
             } else if (text == 'charcuteria') {
               TurnProvider().createTurn(supermarketID, 'charcuteria');
-              Get.toNamed('userTurn', arguments: 'charcuteria');
+              Get.toNamed('userTurn');
             } else if (text == 'pescaderia') {
               TurnProvider().createTurn(supermarketID, 'pescaderia');
-              Get.toNamed('userTurn', arguments: 'pescaderia');
+              Get.toNamed('userTurn');
             }
           },
           child: Container(
@@ -105,18 +105,19 @@ class SelectServiceTurnPage extends StatelessWidget {
               ],
             ),
             child: Center(
-              child: Text(
-                (() {
-                  if (text == 'carniceria') {
-                    return 'Pedir turno carnicería';
-                  } else if (text == 'charcuteria') {
-                    return 'Pedir turno charcutería';
-                  } else if (text == 'pescaderia') {
-                    return 'Pedir turno pescadería';
-                  }
-                }()),
-                style: TextStyle(fontSize: 32, color: Color(0xFF3f4756)),
-                textAlign: TextAlign.center,
+              child: Image(
+                height: 80,
+                image: AssetImage(
+                  () {
+                    if (text == 'carniceria') {
+                      return 'assets/images/meat.png';
+                    } else if (text == 'charcuteria') {
+                      return 'assets/images/cheese.png';
+                    } else if (text == 'pescaderia') {
+                      return 'assets/images/fish.png';
+                    }
+                  }(),
+                ),
               ),
             ),
           ),

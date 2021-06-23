@@ -109,11 +109,8 @@ class TurnProvider {
 
   Future<List> getUserTurnInfo(String service) async {
     List turnUserInfo = [];
-    var _refDB = FirebaseDatabase.instance
-        .reference()
-        .child(_marketId)
-        .child('cola_espera')
-        .child('charcuteria');
+    var _refDB =
+        FirebaseDatabase.instance.reference().child(_marketId).child('cola_espera').child(service);
     var _userLogged = _refDB.orderByChild('id_usuario').equalTo(_uid);
 
     await _userLogged.once().then((DataSnapshot snapshot) {
@@ -126,26 +123,6 @@ class TurnProvider {
       }
     });
     return turnUserInfo;
-  }
-
-  Future<int> getClientTurnNumber() async {
-    int turnUserNumber;
-    var _refDB = FirebaseDatabase.instance
-        .reference()
-        .child(_marketId)
-        .child('cola_espera')
-        .child('charcuteria');
-    var _userLogged = _refDB.orderByChild('num').limitToFirst(1);
-
-    await _userLogged.once().then((DataSnapshot snapshot) {
-      if (snapshot.value != null) {
-        Map<dynamic, dynamic> _values = snapshot.value;
-        _values.forEach((key, value) {
-          turnUserNumber = value['tu_num'];
-        });
-      }
-    });
-    return turnUserNumber;
   }
 
   Future<void> nextTurn() async {
@@ -166,11 +143,8 @@ class TurnProvider {
   }
 
   Future<void> cancelTurn(String service) async {
-    var _refDB = FirebaseDatabase.instance
-        .reference()
-        .child(_marketId)
-        .child('cola_espera')
-        .child(service);
+    var _refDB =
+        FirebaseDatabase.instance.reference().child(_marketId).child('cola_espera').child(service);
     var _userLogged = _refDB.orderByChild('id_usuario').equalTo(_uid);
 
     await _userLogged.once().then((event) async {
