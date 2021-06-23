@@ -27,18 +27,78 @@ class UserPage extends StatelessWidget {
             color2: Colors.green,
           ),
           title: Text(
-            SupermarketApp.sharedPreferences.getString(SupermarketApp.userEmail),
+            'Turn App',
             style: TextStyle(color: Colors.white, fontSize: 24.0),
           ),
-          actions: [
-            IconButton(
-              icon: Icon(Icons.logout),
-              onPressed: () => UserProvider().logOut(context),
-            )
-          ],
         ),
+        endDrawer: Container(width: 250, child: Drawer(child: _drawer(context))),
         body: _userScreen(context, controller),
       ),
+    );
+  }
+
+  Widget _drawer(BuildContext context) {
+    return Container(
+      color: Colors.green,
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: [
+          _drawerHeader(),
+          _drawerItem(
+            icon: Icons.person,
+            text:
+                'Usuario: ${SupermarketApp.sharedPreferences.getString(SupermarketApp.userEmail)}',
+            onTap: () {},
+          ),
+          _drawerItem(
+            icon: Icons.remove_shopping_cart,
+            text: 'Salir del supermercado',
+            onTap: () => _supermarketOut(),
+          ),
+          Divider(thickness: 5),
+          _drawerItem(
+            icon: Icons.logout,
+            text: 'Cerrar sesión',
+            onTap: () => UserProvider().logOut(context),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _drawerHeader() {
+    return DrawerHeader(
+      margin: EdgeInsets.zero,
+      padding: EdgeInsets.zero,
+      decoration: BoxDecoration(
+        image:
+            DecorationImage(fit: BoxFit.fill, image: AssetImage('assets/images/image_drawer.png')),
+      ),
+      child: Stack(
+        children: [
+          Positioned(
+            bottom: 20.0,
+            left: 20.0,
+            child: Text("Turn App",
+                style: TextStyle(color: Colors.white, fontSize: 36.0, fontWeight: FontWeight.bold)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _drawerItem({IconData icon, String text, GestureTapCallback onTap}) {
+    return ListTile(
+      title: Row(
+        children: [
+          Icon(icon),
+          Padding(
+            padding: EdgeInsets.only(left: 8.0),
+            child: Text(text),
+          )
+        ],
+      ),
+      onTap: onTap,
     );
   }
 
@@ -58,8 +118,6 @@ class UserPage extends StatelessWidget {
           children: [
             _takeTurn(controller),
             _products(),
-            SizedBox(height: 20),
-            _buttonOut(context),
           ],
         ),
       ),
@@ -123,51 +181,10 @@ class UserPage extends StatelessWidget {
     );
   }
 
-  Widget _buttonOut(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 45),
-      child: ElevatedButton(
-        onPressed: () => showDialog<String>(
-          context: context,
-          builder: (BuildContext context) => AlertDialog(
-            title: Text('¿Seguro que desea salir?'),
-            content: Text('Si sale perderá todos los turnos en los que esté.'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  TurnProvider().cancelTurn('carniceria');
-                  TurnProvider().cancelTurn('charcuteria');
-                  TurnProvider().cancelTurn('pescaderia');
-                  _supermarketOut();
-                },
-                child: Text('Confirmar'),
-                style: TextButton.styleFrom(primary: Colors.green),
-              ),
-              TextButton(
-                onPressed: () => Navigator.pop(context, 'Cancelar'),
-                child: Text('Cancelar'),
-                style: TextButton.styleFrom(primary: Colors.red),
-              )
-            ],
-          ),
-        ),
-        child: Container(
-          child: Text(
-            'Salir del supermercado',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0),
-          ),
-        ),
-        style: ElevatedButton.styleFrom(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50.0)),
-          elevation: 2.0,
-          primary: Colors.red,
-          textStyle: TextStyle(color: Colors.white),
-        ),
-      ),
-    );
-  }
-
   Future<void> _supermarketOut() async {
+    await TurnProvider().cancelTurn('carniceria');
+    await TurnProvider().cancelTurn('charcuteria');
+    await TurnProvider().cancelTurn('pescaderia');
     await SupermarketProvider().logoutSupermarket();
     Get.offAllNamed('selectSupermarket');
   }
