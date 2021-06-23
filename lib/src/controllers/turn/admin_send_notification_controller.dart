@@ -58,7 +58,7 @@ class AdminSendNotificationController extends GetxController {
           NotificationSendRequest notification = NotificationSendRequest(
             token: token,
             title: "TurnApp",
-            body: "En breve será su turno. Por favor, acerquese al puesto. Gracias",
+            body: "En breve será su turno. Por favor, acerquese a la $_adminService. Gracias",
           );
           PushNotificationService service = PushNotificationService();
           await service.sendNotification(notification);

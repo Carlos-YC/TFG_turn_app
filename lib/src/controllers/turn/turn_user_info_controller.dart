@@ -42,7 +42,7 @@ class TurnUserInfoController extends GetxController {
       this.listener = _firstUserInfo.onValue.listen((event) async {
         final _firstUserData = event.snapshot.value;
         if (_firstUserData != null) {
-          turnUserInfo = await TurnProvider().getUserTurnInfo();
+          turnUserInfo = await TurnProvider().getUserTurnInfo('charcuteria');
           _firstUserData.forEach((key, value) {
             this.firstUserNumber.value = value['num'];
             this.numUsers.value = turnUserInfo[0]['num'] - this.firstUserNumber.value;

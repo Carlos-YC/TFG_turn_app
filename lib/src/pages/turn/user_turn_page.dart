@@ -12,8 +12,6 @@ class UserTurnPage extends StatefulWidget {
 }
 
 class _UserTurnPageState extends State<UserTurnPage> {
-  List users;
-
   @override
   Widget build(BuildContext context) {
     return GetBuilder<TurnUserInfoController>(
@@ -26,12 +24,16 @@ class _UserTurnPageState extends State<UserTurnPage> {
             color1: Colors.lightGreen,
             color2: Colors.green,
           ),
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () => Get.offAllNamed('userPage'),
+          ),
           title: Text(
             'Mi turno',
             style: TextStyle(color: Colors.white, fontSize: 24.0),
           ),
         ),
-        body: _turnInfo(controller),
+        body: Column(children: [_turnInfo(controller)]),
       ),
     );
   }
@@ -134,7 +136,7 @@ class _UserTurnPageState extends State<UserTurnPage> {
           actions: [
             TextButton(
               onPressed: () {
-                TurnProvider().cancelTurn();
+                TurnProvider().cancelTurn('charcuteria');
                 Get.offAllNamed('userPage');
               },
               child: Text('Confirmar'),

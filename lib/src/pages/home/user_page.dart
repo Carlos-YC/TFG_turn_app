@@ -7,6 +7,7 @@ import 'package:tfg_app/src/config/config.dart';
 
 import 'package:tfg_app/src/controllers/turn/user_has_turn_controller.dart';
 import 'package:tfg_app/src/providers/select_supermarket_provider.dart';
+import 'package:tfg_app/src/providers/turn_provider.dart';
 import 'package:tfg_app/src/providers/user_provider.dart';
 
 import 'package:tfg_app/src/widgets/custom_box_decoration_widget.dart';
@@ -36,12 +37,12 @@ class UserPage extends StatelessWidget {
             )
           ],
         ),
-        body: _userScreen(controller),
+        body: _userScreen(context, controller),
       ),
     );
   }
 
-  Widget _userScreen(UserHasTurnController controller) {
+  Widget _userScreen(BuildContext context, UserHasTurnController controller) {
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -54,7 +55,12 @@ class UserPage extends StatelessWidget {
         padding: EdgeInsets.all(15.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [_takeTurn(controller), _products(), _buttonOut()],
+          children: [
+            _takeTurn(controller),
+            _products(),
+            SizedBox(height: 20),
+            _buttonOut(context),
+          ],
         ),
       ),
     );
@@ -62,7 +68,11 @@ class UserPage extends StatelessWidget {
 
   Widget _takeTurn(UserHasTurnController controller) {
     return Obx(() {
-      if (controller.hasTurn.value) {
+      if (controller.hasTurn1.value) {
+        return _boxButton('Ver turno', 'userTurn');
+      } else if (controller.hasTurn2.value) {
+        return _boxButton('Ver turno', 'userTurn');
+      } else if (controller.hasTurn3.value) {
         return _boxButton('Ver turno', 'userTurn');
       } else {
         return _boxButton('Pedir turno', 'selectServiceTurn');
@@ -79,28 +89,25 @@ class UserPage extends StatelessWidget {
 
   Widget _boxButton(String text, String route) {
     return Expanded(
-      child: Padding(
-        padding: EdgeInsets.all(15.0),
-        child: InkWell(
-          onTap: () => Get.toNamed(route),
-          child: Container(
-            margin: EdgeInsets.symmetric(vertical: 10.0),
-            padding: EdgeInsets.all(20.0),
-            decoration: BoxDecoration(
-              color: Color(0xFF97f48a),
-              borderRadius: BorderRadius.circular(7.0),
-              boxShadow: <BoxShadow>[
-                BoxShadow(
-                  color: Colors.black26,
-                  blurRadius: 3.0,
-                  offset: Offset(0.5, 1.5),
-                  spreadRadius: 3.0,
-                )
-              ],
-            ),
-            child: Center(
-              child: _textShow(text, 0xFF3f4756),
-            ),
+      child: InkWell(
+        onTap: () => Get.toNamed(route),
+        child: Container(
+          margin: EdgeInsets.symmetric(vertical: 20.0),
+          padding: EdgeInsets.all(20.0),
+          decoration: BoxDecoration(
+            color: Color(0xFF97f48a),
+            borderRadius: BorderRadius.circular(7.0),
+            boxShadow: <BoxShadow>[
+              BoxShadow(
+                color: Colors.black26,
+                blurRadius: 3.0,
+                offset: Offset(0.5, 1.5),
+                spreadRadius: 3.0,
+              )
+            ],
+          ),
+          child: Center(
+            child: _textShow(text, 0xFF3f4756),
           ),
         ),
       ),
@@ -116,21 +123,43 @@ class UserPage extends StatelessWidget {
     );
   }
 
-  Widget _buttonOut() {
+  Widget _buttonOut(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.fromLTRB(30, 0, 30, 30),
-      child: InkWell(
-        onTap: () => _supermarketOut(),
+      padding: EdgeInsets.symmetric(horizontal: 45),
+      child: ElevatedButton(
+        onPressed: () => showDialog<String>(
+          context: context,
+          builder: (BuildContext context) => AlertDialog(
+            title: Text('¿Seguro que desea salir?'),
+            content: Text('Si sale perderá todos los turnos en los que esté.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  TurnProvider().cancelTurn('charcuteria');
+                  _supermarketOut();
+                },
+                child: Text('Confirmar'),
+                style: TextButton.styleFrom(primary: Colors.green),
+              ),
+              TextButton(
+                onPressed: () => Navigator.pop(context, 'Cancelar'),
+                child: Text('Cancelar'),
+                style: TextButton.styleFrom(primary: Colors.red),
+              )
+            ],
+          ),
+        ),
         child: Container(
-          margin: EdgeInsets.symmetric(vertical: 10.0),
-          padding: EdgeInsets.all(20.0),
-          decoration: BoxDecoration(
-            color: Colors.red,
-            borderRadius: BorderRadius.circular(50.0),
+          child: Text(
+            'Salir del supermercado',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0),
           ),
-          child: Center(
-            child: _textShow('Salir del supermercado', 0xFFFFFFFF),
-          ),
+        ),
+        style: ElevatedButton.styleFrom(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50.0)),
+          elevation: 2.0,
+          primary: Colors.red,
+          textStyle: TextStyle(color: Colors.white),
         ),
       ),
     );

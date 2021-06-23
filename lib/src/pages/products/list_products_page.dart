@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+
 import 'package:get/get.dart';
 
+import 'package:tfg_app/src/config/config.dart';
+
 import 'package:tfg_app/src/controllers/product_controller.dart';
+
 import 'package:tfg_app/src/models/product_model.dart';
 import 'package:tfg_app/src/dialog/display_dialog.dart';
 import 'package:tfg_app/src/widgets/custom_box_decoration_widget.dart';
@@ -12,6 +16,7 @@ class ListProductsPage extends StatefulWidget {
 }
 
 class _ListProductsPageState extends State<ListProductsPage> {
+  final String _adminService = SupermarketApp.sharedPreferences.getString(SupermarketApp.service);
   RxList<ProductModel> _products;
   int _sortColumnIndex = 2;
   bool _isAscending = true;
@@ -28,7 +33,18 @@ class _ListProductsPageState extends State<ListProductsPage> {
             color1: Colors.lightBlueAccent,
             color2: Colors.blue,
           ),
-          title: Text('Productos', style: TextStyle(color: Colors.white, fontSize: 24.0)),
+          title: Text(
+                () {
+              if (_adminService == 'carniceria') {
+                return 'Productos carnicería';
+              } else if (_adminService == 'charcuteria') {
+                return 'Productos charcutería';
+              } else if (_adminService == 'pescaderia') {
+                return 'Productos pescadería';
+              }
+            }(),
+            style: TextStyle(color: Colors.white, fontSize: 24.0),
+          ),
         ),
         body: SingleChildScrollView(child: _productsTable(controller)),
       ),

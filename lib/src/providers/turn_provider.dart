@@ -17,7 +17,7 @@ class TurnProvider {
     this._uid = SupermarketApp.auth.currentUser.uid;
   }
 
-  Future<bool> readQR() async {
+  Future<bool> readQRSupermarket() async {
     bool _isScanDB;
     String _qrScan;
 
@@ -32,27 +32,15 @@ class TurnProvider {
   }
 
   Future<bool> isSupermarket(String qrScan) async {
-    var _arr = qrScan.split(',');
     final _refDB = FirebaseDatabase.instance.reference();
 
-    final response1 = await _refDB.orderByKey().equalTo(_arr[0]).once();
+    final response1 = await _refDB.orderByKey().equalTo(qrScan).once();
     if (response1.value != null) {
-      final response2 = await _refDB.child(_arr[0]).child('servicios').once();
-      if (response2.value != null) {
-        List<String> servicesList = response2.value.split(',');
-        if (servicesList.contains(_arr[1])) {
-          var setMarketId =
-              await SupermarketApp.sharedPreferences.setString(SupermarketApp.marketId, _arr[0]);
-          await createTurn(_arr[0], _arr[1]);
-          if (setMarketId) {
-            return true;
-          } else {
-            return false;
-          }
-        }
-      }
+      await SupermarketApp.sharedPreferences.setString(SupermarketApp.marketId, qrScan);
+      return true;
+    } else {
+      return false;
     }
-    return false;
   }
 
   Future<void> createTurn(String supermarketId, String service) async {
@@ -79,7 +67,7 @@ class TurnProvider {
         if (_setNumber > 99) _setNumber = 1;
 
         if (_lastNumber < 10) {
-          _refDB.child('charcuteria_00$_lastNumber').set({
+          _refDB.child('${service}_00$_lastNumber').set({
             'app': true,
             'id_usuario': _uid,
             'fecha': _timeNow.toString(),
@@ -88,7 +76,7 @@ class TurnProvider {
             'token': _token,
           });
         } else if (_lastNumber > 9 && _lastNumber < 100) {
-          _refDB.child('charcuteria_0$_lastNumber').set({
+          _refDB.child('${service}_0$_lastNumber').set({
             'app': true,
             'id_usuario': _uid,
             'fecha': _timeNow.toString(),
@@ -97,7 +85,7 @@ class TurnProvider {
             'token': _token,
           });
         } else if (_lastNumber > 99) {
-          _refDB.child('charcuteria_$_lastNumber').set({
+          _refDB.child('${service}_$_lastNumber').set({
             'app': true,
             'id_usuario': _uid,
             'fecha': _timeNow.toString(),
@@ -107,7 +95,7 @@ class TurnProvider {
           });
         }
       } else {
-        _refDB.child('charcuteria_001').set({
+        _refDB.child('${service}_001').set({
           'app': true,
           'id_usuario': _uid,
           'fecha': _timeNow.toString(),
@@ -119,7 +107,7 @@ class TurnProvider {
     });
   }
 
-  Future<List> getUserTurnInfo() async {
+  Future<List> getUserTurnInfo(String service) async {
     List turnUserInfo = [];
     var _refDB = FirebaseDatabase.instance
         .reference()
@@ -177,12 +165,12 @@ class TurnProvider {
     });
   }
 
-  Future<void> cancelTurn() async {
+  Future<void> cancelTurn(String service) async {
     var _refDB = FirebaseDatabase.instance
         .reference()
         .child(_marketId)
         .child('cola_espera')
-        .child('charcuteria');
+        .child(service);
     var _userLogged = _refDB.orderByChild('id_usuario').equalTo(_uid);
 
     await _userLogged.once().then((event) async {
@@ -190,7 +178,6 @@ class TurnProvider {
         Map map = event.value;
         String keyToDelete = map.keys.toList()[0].toString();
         await _refDB.child(keyToDelete).remove().then((_) async {
-          await SupermarketApp.sharedPreferences.setString(SupermarketApp.marketId, 'marketid');
           print('$keyToDelete se borró correctamente');
         });
       }

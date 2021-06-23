@@ -1,11 +1,14 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+
 import 'package:get/get.dart';
 
 import 'package:tfg_app/src/config/config.dart';
+
 import 'package:tfg_app/src/controllers/turn/admin_turn_controller.dart';
 import 'package:tfg_app/src/providers/turn_provider.dart';
+
 import 'package:tfg_app/src/widgets/custom_box_decoration_widget.dart';
 
 class AdminTurnPage extends StatefulWidget {
@@ -24,9 +27,7 @@ class _AdminTurnPageState extends State<AdminTurnPage> {
     _counter = 0;
     _counterSec = 0;
     _counterMin = 0;
-    if (_timer != null) {
-      _timer.cancel();
-    }
+    if (_timer != null) _timer.cancel();
     if (mounted) {
       _timer = Timer.periodic(Duration(seconds: 1), (timer) {
         setState(() {
@@ -44,9 +45,7 @@ class _AdminTurnPageState extends State<AdminTurnPage> {
 
   @override
   void dispose() {
-    if (_timer != null) {
-      _timer.cancel();
-    }
+    if (_timer != null) _timer.cancel();
     super.dispose();
   }
 
@@ -63,7 +62,15 @@ class _AdminTurnPageState extends State<AdminTurnPage> {
             color2: Colors.blue,
           ),
           title: Text(
-            'Turno',
+            () {
+              if (_adminService == 'carniceria') {
+                return 'Turnos carnicería';
+              } else if (_adminService == 'charcuteria') {
+                return 'Turnos charcutería';
+              } else if (_adminService == 'pescaderia') {
+                return 'Turnos pescadería';
+              }
+            }(),
             style: TextStyle(color: Colors.white, fontSize: 24.0),
           ),
         ),
@@ -72,7 +79,7 @@ class _AdminTurnPageState extends State<AdminTurnPage> {
             padding: EdgeInsets.symmetric(vertical: 30.0, horizontal: 15.0),
             child: Column(
               children: [
-                _title(_adminService),
+                //_title(_adminService),
                 SizedBox(height: 45),
                 _box(controller),
               ],
@@ -84,25 +91,25 @@ class _AdminTurnPageState extends State<AdminTurnPage> {
     );
   }
 
-  Widget _title(String service) {
-    return Text(
-      () {
-        if (service == 'carniceria') {
-          return 'Turnos Carnicería';
-        } else if (service == 'charcuteria') {
-          return 'Turnos Charcutería';
-        } else if (service == 'pescaderia') {
-          return 'Turnos Pescadería';
-        }
-      }(),
-      style: TextStyle(
-        fontSize: 36.0,
-        fontWeight: FontWeight.bold,
-        color: Colors.white,
-        decoration: TextDecoration.underline,
-      ),
-    );
-  }
+  // Widget _title(String service) {
+  //   return Text(
+  //     () {
+  //       if (service == 'carniceria') {
+  //         return 'Turnos Carnicería';
+  //       } else if (service == 'charcuteria') {
+  //         return 'Turnos Charcutería';
+  //       } else if (service == 'pescaderia') {
+  //         return 'Turnos Pescadería';
+  //       }
+  //     }(),
+  //     style: TextStyle(
+  //       fontSize: 36.0,
+  //       fontWeight: FontWeight.bold,
+  //       color: Colors.white,
+  //       decoration: TextDecoration.underline,
+  //     ),
+  //   );
+  // }
 
   Widget _box(AdminTurnController controller) {
     return Obx(() {
