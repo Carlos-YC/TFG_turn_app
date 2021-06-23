@@ -135,7 +135,9 @@ class UserPage extends StatelessWidget {
             actions: [
               TextButton(
                 onPressed: () {
+                  TurnProvider().cancelTurn('carniceria');
                   TurnProvider().cancelTurn('charcuteria');
+                  TurnProvider().cancelTurn('pescaderia');
                   _supermarketOut();
                 },
                 child: Text('Confirmar'),
