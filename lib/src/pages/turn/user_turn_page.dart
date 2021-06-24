@@ -38,16 +38,16 @@ class _UserTurnPageState extends State<UserTurnPage> {
             style: TextStyle(color: Colors.white, fontSize: 24.0),
           ),
         ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              _turnInfoCarniceria(controller, 'carniceria'),
-              SizedBox(height: 20.0),
-              _turnInfoCharcuteria(controller, 'charcuteria'),
-              SizedBox(height: 20.0),
-              _turnInfoPescaderia(controller, 'pescaderia'),
-            ],
-          ),
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            _turnInfoCarniceria(controller, 'carniceria'),
+            SizedBox(height: 20.0),
+            _turnInfoCharcuteria(controller, 'charcuteria'),
+            SizedBox(height: 20.0),
+            _turnInfoPescaderia(controller, 'pescaderia'),
+          ],
         ),
       ),
     );
@@ -58,72 +58,18 @@ class _UserTurnPageState extends State<UserTurnPage> {
       if (controller.numUsersCarniceria.value < 0) {
         return Center(
           child: Center(
-            child: Text('Ha habido un error',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24.0)),
+            child: Text(
+              'Ha habido un error',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24.0),
+            ),
           ),
         );
       } else {
         if (controller.turnUserInfoCarniceria.length == 0) {
           return Center(child: _takeTurn(service));
         } else {
-          return Container(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Card(
-                  margin: EdgeInsets.only(left: 20.0, right: 20.0),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
-                  color: Colors.teal,
-                  elevation: 5,
-                  child: Padding(
-                    padding: EdgeInsets.all(10.0),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          'Turno de $service',
-                          style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
-                        ),
-                        SizedBox(
-                          height: 20.0,
-                          width: 160.0,
-                          child: Divider(
-                            color: Colors.blue[300],
-                            thickness: 4.0,
-                          ),
-                        ),
-                        Container(
-                          child: Column(
-                            children: [
-                              _turnInfoText(
-                                  Icons.confirmation_num_outlined,
-                                  'Turno: ${controller.turnUserInfoCarniceria[0]['tu_num'].toString()}',
-                                  20.0),
-                              _turnInfoText(
-                                  Icons.people,
-                                  'Clientes por delante: ${controller.numUsersCarniceria.toString()}',
-                                  16.0),
-                              _turnInfoText(Icons.access_time, 'Tiempo de espera: -', 16.0),
-                              //_turnInfoText(null, '15 min aprox.', 16.0),
-                            ],
-                          ),
-                        ),
-                        SizedBox(
-                          height: 30.0,
-                          width: 80.0,
-                          child: Divider(
-                            color: Colors.blue[300],
-                            thickness: 4.0,
-                          ),
-                        ),
-                        _cancelButton(service),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          );
+          return _cardInfo(service, controller.turnUserInfoCarniceria[0]['tu_num'].toString(),
+              controller.numUsersCarniceria.toString());
         }
       }
     });
@@ -134,72 +80,18 @@ class _UserTurnPageState extends State<UserTurnPage> {
       if (controller.numUsersCharcuteria.value < 0) {
         return Center(
           child: Center(
-            child: Text('Ha habido un error',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24.0)),
+            child: Text(
+              'Ha habido un error',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24.0),
+            ),
           ),
         );
       } else {
         if (controller.turnUserInfoCharcuteria.length == 0) {
           return Center(child: _takeTurn(service));
         } else {
-          return Container(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Card(
-                  margin: EdgeInsets.only(left: 20.0, right: 20.0),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
-                  color: Colors.orange[300],
-                  elevation: 5,
-                  child: Padding(
-                    padding: EdgeInsets.all(10.0),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          'Turno de $service',
-                          style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
-                        ),
-                        SizedBox(
-                          height: 20.0,
-                          width: 160.0,
-                          child: Divider(
-                            color: Colors.teal,
-                            thickness: 4.0,
-                          ),
-                        ),
-                        Container(
-                          child: Column(
-                            children: [
-                              _turnInfoText(
-                                  Icons.confirmation_num_outlined,
-                                  'Turno: ${controller.turnUserInfoCharcuteria[0]['tu_num'].toString()}',
-                                  20.0),
-                              _turnInfoText(
-                                  Icons.people,
-                                  'Clientes por delante: ${controller.numUsersCharcuteria.toString()}',
-                                  16.0),
-                              _turnInfoText(Icons.access_time, 'Tiempo de espera:', 16.0),
-                              //_turnInfoText(null, '15 min aprox.', 16.0),
-                            ],
-                          ),
-                        ),
-                        SizedBox(
-                          height: 30.0,
-                          width: 80.0,
-                          child: Divider(
-                            color: Colors.teal,
-                            thickness: 4.0,
-                          ),
-                        ),
-                        _cancelButton(service),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          );
+          return _cardInfo(service, controller.turnUserInfoCharcuteria[0]['tu_num'].toString(),
+              controller.numUsersCharcuteria.toString());
         }
       }
     });
@@ -210,75 +102,89 @@ class _UserTurnPageState extends State<UserTurnPage> {
       if (controller.numUsersPescaderia.value < 0) {
         return Center(
           child: Center(
-            child: Text('Ha habido un error',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24.0)),
+            child: Text(
+              'Ha habido un error',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24.0),
+            ),
           ),
         );
       } else {
         if (controller.turnUserInfoPescaderia.length == 0) {
           return Center(child: _takeTurn(service));
         } else {
-          return Container(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Card(
-                  margin: EdgeInsets.only(left: 20.0, right: 20.0),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
-                  color: Colors.blue[300],
-                  elevation: 5,
-                  child: Padding(
-                    padding: EdgeInsets.all(10.0),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          'Turno de $service',
-                          style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
-                        ),
-                        SizedBox(
-                          height: 20.0,
-                          width: 160.0,
-                          child: Divider(
-                            color: Colors.orange[300],
-                            thickness: 4.0,
-                          ),
-                        ),
-                        Container(
-                          child: Column(
-                            children: [
-                              _turnInfoText(
-                                  Icons.confirmation_num_outlined,
-                                  'Turno: ${controller.turnUserInfoPescaderia[0]['tu_num'].toString()}',
-                                  20.0),
-                              _turnInfoText(
-                                  Icons.people,
-                                  'Clientes por delante: ${controller.numUsersPescaderia.toString()}',
-                                  16.0),
-                              _turnInfoText(Icons.access_time, 'Tiempo de espera:', 16.0),
-                              //_turnInfoText(null, '15 min aprox.', 16.0),
-                            ],
-                          ),
-                        ),
-                        SizedBox(
-                          height: 30.0,
-                          width: 80.0,
-                          child: Divider(
-                            color: Colors.orange[300],
-                            thickness: 4.0,
-                          ),
-                        ),
-                        _cancelButton(service),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          );
+          return _cardInfo(service, controller.turnUserInfoPescaderia[0]['tu_num'].toString(),
+              controller.numUsersPescaderia.toString());
         }
       }
     });
+  }
+
+  Widget _cardInfo(String service, String turnUser, String numUSers) {
+    return Container(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Card(
+            margin: EdgeInsets.only(left: 20.0, right: 20.0),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
+            color: () {
+              if (service == 'carniceria') {
+                return Colors.red[300];
+              } else if (service == 'charcuteria') {
+                return Colors.orange[300];
+              } else if (service == 'pescaderia') {
+                return Colors.blue[300];
+              }
+            }(),
+            elevation: 5,
+            child: Stack(
+              children: [
+                Padding(
+                  padding: EdgeInsets.all(15.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        'Turno de $service',
+                        style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(
+                        height: 20.0,
+                        width: 160.0,
+                        child: Divider(
+                          color: () {
+                            if (service == 'carniceria') {
+                              return Colors.blue[300];
+                            } else if (service == 'charcuteria') {
+                              return Colors.red[300];
+                            } else if (service == 'pescaderia') {
+                              return Colors.orange[300];
+                            }
+                          }(),
+                          thickness: 4.0,
+                        ),
+                      ),
+                      Container(
+                        child: Column(
+                          children: [
+                            _turnInfoText(
+                                Icons.confirmation_num_outlined, 'Turno: $turnUser', 20.0),
+                            _turnInfoText(Icons.people, 'Clientes por delante: $numUSers', 16.0),
+                            _turnInfoText(Icons.access_time, 'Tiempo de espera: -', 16.0),
+                            //_turnInfoText(null, '15 min aprox.', 16.0),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                _cancelButton(service)
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _turnInfoText(IconData showIcon, String infoText, double fontSize) {
@@ -286,6 +192,7 @@ class _UserTurnPageState extends State<UserTurnPage> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Icon(showIcon),
+        SizedBox(width: 10),
         Text(
           infoText,
           style: TextStyle(fontSize: fontSize, fontWeight: FontWeight.bold),
@@ -295,42 +202,39 @@ class _UserTurnPageState extends State<UserTurnPage> {
   }
 
   Widget _cancelButton(String service) {
-    return ElevatedButton(
-      onPressed: () => showDialog<String>(
-        context: context,
-        builder: (BuildContext context) => AlertDialog(
-          title: Text('Cancelar turno de $service'),
-          content: Text('¿Seguro que quiere cancelar su turno?'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                TurnProvider().cancelTurn(service);
-                Get.offAllNamed('userPage');
-              },
-              child: Text('Confirmar'),
-              style: TextButton.styleFrom(primary: Colors.green),
-            ),
-            TextButton(
-              onPressed: () => Navigator.pop(context, 'Cancelar'),
-              child: Text('Cancelar'),
-              style: TextButton.styleFrom(primary: Colors.red),
-            )
-          ],
+    return Positioned(
+      top: 0,
+      right: 0,
+      child: IconButton(
+        icon: Icon(Icons.cancel),
+        color: Colors.red[800],
+        onPressed: () => showDialog<String>(
+          context: context,
+          builder: (BuildContext context) => _alertDialog(service),
         ),
       ),
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 20.0),
-        child: Text(
-          'Cancelar turno',
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0),
+    );
+  }
+
+  Widget _alertDialog(String service) {
+    return AlertDialog(
+      title: Text('Cancelar turno de $service'),
+      content: Text('¿Seguro que quiere cancelar su turno?'),
+      actions: [
+        TextButton(
+          onPressed: () {
+            TurnProvider().cancelTurn(service);
+            Get.offAllNamed('userPage');
+          },
+          child: Text('Confirmar'),
+          style: TextButton.styleFrom(primary: Colors.green),
         ),
-      ),
-      style: ElevatedButton.styleFrom(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-        elevation: 2.0,
-        primary: Colors.red,
-        textStyle: TextStyle(color: Colors.white),
-      ),
+        TextButton(
+          onPressed: () => Navigator.pop(context, 'Cancelar'),
+          child: Text('Cancelar'),
+          style: TextButton.styleFrom(primary: Colors.red),
+        )
+      ],
     );
   }
 

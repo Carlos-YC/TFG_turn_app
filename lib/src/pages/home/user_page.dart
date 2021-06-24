@@ -79,8 +79,10 @@ class UserPage extends StatelessWidget {
           Positioned(
             bottom: 20.0,
             left: 20.0,
-            child: Text("Turn App",
-                style: TextStyle(color: Colors.white, fontSize: 36.0, fontWeight: FontWeight.bold)),
+            child: Text(
+              "Turn App",
+              style: TextStyle(color: Colors.white, fontSize: 36.0, fontWeight: FontWeight.bold),
+            ),
           ),
         ],
       ),
@@ -95,7 +97,7 @@ class UserPage extends StatelessWidget {
           Padding(
             padding: EdgeInsets.only(left: 8.0),
             child: Text(text),
-          )
+          ),
         ],
       ),
       onTap: onTap,
@@ -112,14 +114,49 @@ class UserPage extends StatelessWidget {
         ),
       ),
       child: Padding(
-        padding: EdgeInsets.all(15.0),
+        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 30),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            SizedBox(height: 10),
+            _supermarketInfo(),
+            SizedBox(height: 30),
             _takeTurn(controller),
             _products(),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _supermarketInfo() {
+    return FutureBuilder(
+      future: SupermarketProvider().supermarketInfo(),
+      builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
+        if (!snapshot.hasData) {
+          return Text('Error al cargar nombre');
+        } else {
+          return Column(
+            children: [
+              _textInfo(snapshot.data[0], 36.0, 1.5),
+              SizedBox(width: 50, child: Divider(color: Colors.white, thickness: 2)),
+              _textInfo(snapshot.data[1], 18.0, 0.5),
+            ],
+          );
+        }
+      },
+    );
+  }
+
+  Widget _textInfo(String text, double size, double spacing) {
+    return Text(
+      text,
+      style: TextStyle(
+        letterSpacing: spacing,
+        color: Colors.white,
+        fontSize: size,
+        fontWeight: FontWeight.bold,
       ),
     );
   }
@@ -147,25 +184,28 @@ class UserPage extends StatelessWidget {
 
   Widget _boxButton(String text, String route) {
     return Expanded(
-      child: InkWell(
-        onTap: () => Get.toNamed(route),
-        child: Container(
-          margin: EdgeInsets.symmetric(vertical: 20.0),
-          padding: EdgeInsets.all(20.0),
-          decoration: BoxDecoration(
-            color: Color(0xFF97f48a),
-            borderRadius: BorderRadius.circular(7.0),
-            boxShadow: <BoxShadow>[
-              BoxShadow(
-                color: Colors.black26,
-                blurRadius: 3.0,
-                offset: Offset(0.5, 1.5),
-                spreadRadius: 3.0,
-              )
-            ],
-          ),
-          child: Center(
-            child: _textShow(text, 0xFF3f4756),
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 30),
+        child: InkWell(
+          onTap: () => Get.toNamed(route),
+          child: Container(
+            margin: EdgeInsets.symmetric(vertical: 20.0),
+            padding: EdgeInsets.all(20.0),
+            decoration: BoxDecoration(
+              color: Color(0xFF97f48a),
+              borderRadius: BorderRadius.circular(7.0),
+              boxShadow: <BoxShadow>[
+                BoxShadow(
+                  color: Colors.black26,
+                  blurRadius: 3.0,
+                  offset: Offset(0.5, 1.5),
+                  spreadRadius: 3.0,
+                )
+              ],
+            ),
+            child: Center(
+              child: _textShow(text, 0xFF3f4756),
+            ),
           ),
         ),
       ),
