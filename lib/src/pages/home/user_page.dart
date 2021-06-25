@@ -177,7 +177,7 @@ class UserPage extends StatelessWidget {
 
   Widget _products() {
     String _text = 'Ver productos';
-    String _route = 'selectService';
+    String _route = 'products';
 
     return _boxButton(_text, _route);
   }

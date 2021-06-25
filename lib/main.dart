@@ -18,7 +18,6 @@ import 'package:tfg_app/src/pages/home/user_select_supermarket.dart';
 import 'package:tfg_app/src/pages/home/user_page.dart';
 
 import 'package:tfg_app/src/pages/products/list_products_page.dart';
-import 'package:tfg_app/src/pages/products/select_supermarket_service_page.dart';
 import 'package:tfg_app/src/pages/products/card_products_page.dart';
 import 'package:tfg_app/src/pages/products/detail_product_page.dart';
 
@@ -71,7 +70,6 @@ class _MyAppState extends State<MyApp> {
         'selectServiceTurn': (BuildContext context) => SelectServiceTurnPage(),
         'userTurn': (BuildContext context) => UserTurnPage(),
         'adminTurn': (BuildContext context) => AdminTurnPage(),
-        'selectService': (BuildContext context) => SelectSupermarketServicePage(),
         'products': (BuildContext context) => ProductsPage(),
         'listProducts': (BuildContext context) => ListProductsPage(),
         'detailsProduct': (BuildContext context) => ProductDetails(),

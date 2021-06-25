@@ -5,8 +5,22 @@ import 'package:tfg_app/src/models/product_model.dart';
 import 'package:tfg_app/src/providers/product_provider.dart';
 import 'package:tfg_app/src/widgets/custom_box_decoration_widget.dart';
 
-class ProductsPage extends StatelessWidget {
-  final String service = Get.arguments;
+class ProductsPage extends StatefulWidget {
+  @override
+  _ProductsPageState createState() => _ProductsPageState();
+}
+
+class _ProductsPageState extends State<ProductsPage> {
+  Future<List<ProductModel>> _future = ProductProvider().productList();
+  String _selectedOption = 'Todos';
+  List<String> _productsOptions = [
+    'Todos',
+    'Carniceria',
+    'Charcuteria',
+    'Pescaderia',
+    'Descuentos'
+  ];
+
 
   @override
   Widget build(BuildContext context) {
@@ -19,25 +33,68 @@ class ProductsPage extends StatelessWidget {
           color2: Colors.green,
         ),
         title: Text(
-          (() {
-            if (service == 'carniceria') {
-              return 'Carnicería';
-            } else if (service == 'charcuteria') {
-              return 'Charcutería';
-            } else if (service == 'pescaderia') {
-              return 'Pescadería';
-            }
-          }()),
+          'Productos',
           style: TextStyle(color: Colors.white, fontSize: 24.0),
         ),
+        actions: [_dropDown()],
       ),
       body: _productsTable(),
     );
   }
 
+  List<DropdownMenuItem<String>> getOptionsDropDown() {
+    List<DropdownMenuItem<String>> list = [];
+
+    _productsOptions.forEach((option) {
+      list.add(DropdownMenuItem(child: Text(option), value: option));
+    });
+
+    return list;
+  }
+
+  Widget _dropDown() {
+    return DropdownButton(
+      value: _selectedOption,
+      items: getOptionsDropDown(),
+      dropdownColor: Colors.greenAccent,
+      onChanged: (opt) {
+        setState(() {
+          _selectedOption = opt;
+          switch (opt) {
+            case 'Todos': {
+              _future = ProductProvider().productList();
+            }
+            break;
+
+            case 'Carniceria': {
+              _future = ProductProvider().productListCarniceria();
+            }
+            break;
+
+            case 'Charcuteria': {
+              _future = ProductProvider().productListCharcuteria();
+            }
+            break;
+
+            case 'Pescaderia': {
+              _future = ProductProvider().productListPescaderia();
+            }
+            break;
+
+            case 'Descuentos': {
+              _future = ProductProvider().productListOffers();
+            }
+            break;
+
+          }
+        });
+      },
+    );
+  }
+
   Widget _productsTable() {
     return FutureBuilder(
-      future: ProductProvider().productList(service),
+      future: _future,
       builder: (BuildContext context, AsyncSnapshot<List<ProductModel>> snapshot) {
         if (!snapshot.hasData) {
           return Center(
