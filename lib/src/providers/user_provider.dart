@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 
@@ -19,7 +20,7 @@ class UserProvider {
 
     if (user != null) {
       await _saveUserInfo(user).then((value) {
-        Navigator.pushReplacementNamed(context, 'userPage');
+        Get.offAllNamed('selectSupermarket');
       });
     }
   }
@@ -38,7 +39,7 @@ class UserProvider {
   Future<void> logOut(BuildContext context) async {
     await SupermarketApp.auth.signOut().then((value) async {
       await _deleteSessionInfo();
-      Navigator.pushReplacementNamed(context, 'authentication');
+      Get.offAllNamed('authentication');
     });
   }
 
@@ -70,7 +71,7 @@ class UserProvider {
         await SupermarketApp.sharedPreferences
             .setStringList(SupermarketApp.userCartList, _cartList);
 
-        Navigator.pushReplacementNamed(context, 'userPage');
+        Get.offAllNamed('selectSupermarket');
       } else {
         userDatabaseReference
             .child('admins')
@@ -82,8 +83,12 @@ class UserProvider {
                 .setString(SupermarketApp.userUID, snapshot.value[SupermarketApp.userUID]);
             await SupermarketApp.sharedPreferences
                 .setString(SupermarketApp.userEmail, snapshot.value[SupermarketApp.userEmail]);
+            await SupermarketApp.sharedPreferences
+                .setString(SupermarketApp.marketId, snapshot.value[SupermarketApp.marketId]);
+            await SupermarketApp.sharedPreferences
+                .setString(SupermarketApp.service, snapshot.value[SupermarketApp.service]);
 
-            Navigator.pushReplacementNamed(context, 'adminPage');
+            Get.offAllNamed('adminPage');
           } else {
             DisplayDialog.displayErrorDialog(context, 'Los datos no son validos');
           }
@@ -96,6 +101,8 @@ class UserProvider {
     await SupermarketApp.sharedPreferences.setString(SupermarketApp.userUID, 'uid');
     await SupermarketApp.sharedPreferences.setString(SupermarketApp.userEmail, 'email');
     await SupermarketApp.sharedPreferences.setStringList(SupermarketApp.userCartList, ['userCart']);
+    await SupermarketApp.sharedPreferences.setString(SupermarketApp.marketId, 'marketid');
+    await SupermarketApp.sharedPreferences.setString(SupermarketApp.service, 'servicio');
   }
 
   Future<bool> isAdminLogged() async {

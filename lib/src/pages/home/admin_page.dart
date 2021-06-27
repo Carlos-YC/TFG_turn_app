@@ -3,29 +3,34 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 
+import 'package:tfg_app/src/controllers/turn/admin_send_notification_controller.dart';
+import 'package:tfg_app/src/providers/select_supermarket_provider.dart';
 import 'package:tfg_app/src/providers/user_provider.dart';
 import 'package:tfg_app/src/widgets/custom_box_decoration_widget.dart';
 
 class AdminPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        flexibleSpace: CustomBoxDecoration(
-          color1: Colors.lightBlueAccent,
-          color2: Colors.blue,
+    return GetBuilder<AdminSendNotificationController>(
+      init: AdminSendNotificationController(),
+      builder: (controller) => Scaffold(
+        appBar: AppBar(
+          elevation: 0,
+          flexibleSpace: CustomBoxDecoration(
+            color1: Colors.lightBlueAccent,
+            color2: Colors.blue,
+          ),
+          title: Text('Sesión de administrador',
+              style: TextStyle(color: Colors.white, fontSize: 24.0)),
+          actions: [
+            IconButton(
+              icon: Icon(Icons.logout),
+              onPressed: () => UserProvider().logOut(context),
+            )
+          ],
         ),
-        title:
-            Text('Sesión de administrador', style: TextStyle(color: Colors.white, fontSize: 24.0)),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.logout),
-            onPressed: () => UserProvider().logOut(context),
-          )
-        ],
+        body: _adminScreen(),
       ),
-      body: _adminScreen(),
     );
   }
 
@@ -41,9 +46,47 @@ class AdminPage extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.all(15.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [_turns(), _products()],
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(height: 10),
+            _supermarketInfo(),
+            SizedBox(height: 30),
+            _turns(),
+            _products(),
+          ],
         ),
+      ),
+    );
+  }
+
+  Widget _supermarketInfo() {
+    return FutureBuilder(
+      future: SupermarketProvider().supermarketInfo(),
+      builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
+        if (!snapshot.hasData) {
+          return Text('Error al cargar nombre');
+        } else {
+          return Column(
+            children: [
+              _textInfo(snapshot.data[0], 36.0, 1.5),
+              SizedBox(width: 50, child: Divider(color: Colors.white, thickness: 2)),
+              _textInfo(snapshot.data[1], 18.0, 0.5),
+            ],
+          );
+        }
+      },
+    );
+  }
+
+  Widget _textInfo(String text, double size, double spacing) {
+    return Text(
+      text,
+      style: TextStyle(
+        letterSpacing: spacing,
+        color: Colors.white,
+        fontSize: size,
+        fontWeight: FontWeight.bold,
       ),
     );
   }

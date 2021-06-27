@@ -13,4 +13,9 @@ class SupermarketApp {
   static final String userEmail = 'email';
   static final String userUID = 'uid';
   static String userCartList = 'userCart';
+
+  static List serviceSelected = [];
+
+  static final String marketId = 'marketid';
+  static final String service = 'servicio';
 }
