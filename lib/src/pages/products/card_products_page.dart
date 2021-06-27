@@ -12,15 +12,14 @@ class ProductsPage extends StatefulWidget {
 
 class _ProductsPageState extends State<ProductsPage> {
   Future<List<ProductModel>> _future = ProductProvider().productList();
-  String _selectedOption = 'Todos';
+  String _selectedOption = 'Ver todo';
   List<String> _productsOptions = [
-    'Todos',
+    'Ver todo',
     'Carniceria',
     'Charcuteria',
     'Pescaderia',
     'Descuentos'
   ];
-
 
   @override
   Widget build(BuildContext context) {
@@ -56,36 +55,26 @@ class _ProductsPageState extends State<ProductsPage> {
     return DropdownButton(
       value: _selectedOption,
       items: getOptionsDropDown(),
-      dropdownColor: Colors.greenAccent,
+      dropdownColor: Colors.green,
       onChanged: (opt) {
         setState(() {
           _selectedOption = opt;
           switch (opt) {
-            case 'Todos': {
+            case 'Ver todo':
               _future = ProductProvider().productList();
-            }
-            break;
-
-            case 'Carniceria': {
+              break;
+            case 'Carniceria':
               _future = ProductProvider().productListCarniceria();
-            }
-            break;
-
-            case 'Charcuteria': {
+              break;
+            case 'Charcuteria':
               _future = ProductProvider().productListCharcuteria();
-            }
-            break;
-
-            case 'Pescaderia': {
+              break;
+            case 'Pescaderia':
               _future = ProductProvider().productListPescaderia();
-            }
-            break;
-
-            case 'Descuentos': {
+              break;
+            case 'Descuentos':
               _future = ProductProvider().productListOffers();
-            }
-            break;
-
+              break;
           }
         });
       },
@@ -97,6 +86,10 @@ class _ProductsPageState extends State<ProductsPage> {
       future: _future,
       builder: (BuildContext context, AsyncSnapshot<List<ProductModel>> snapshot) {
         if (!snapshot.hasData) {
+          return Center(
+            child: CircularProgressIndicator()
+          );
+        } else if (snapshot.data.length < 1) {
           return Center(
             child: Text(
               'No hay productos disponibles para ver',

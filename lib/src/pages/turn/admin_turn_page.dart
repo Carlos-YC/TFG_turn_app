@@ -23,6 +23,8 @@ class _AdminTurnPageState extends State<AdminTurnPage> {
   int _counterSec = 0;
   int _counterMin = 0;
 
+  int _timeUnix;
+
   void _startTimer() {
     _counter = 0;
     _counterSec = 0;
@@ -71,45 +73,19 @@ class _AdminTurnPageState extends State<AdminTurnPage> {
                 return 'Turnos pescadería';
               }
             }(),
-            style: TextStyle(color: Colors.white, fontSize: 24.0),
+            style: TextStyle(color: Colors.white, fontSize: 24),
           ),
         ),
         body: Container(
           child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 30.0, horizontal: 15.0),
-            child: Column(
-              children: [
-                //_title(_adminService),
-                SizedBox(height: 45),
-                _box(controller),
-              ],
-            ),
+            padding: EdgeInsets.only(bottom: 30, left: 15, right: 15),
+            child: _box(controller),
           ),
         ),
         floatingActionButton: Container(child: _showTimer()),
       ),
     );
   }
-
-  // Widget _title(String service) {
-  //   return Text(
-  //     () {
-  //       if (service == 'carniceria') {
-  //         return 'Turnos Carnicería';
-  //       } else if (service == 'charcuteria') {
-  //         return 'Turnos Charcutería';
-  //       } else if (service == 'pescaderia') {
-  //         return 'Turnos Pescadería';
-  //       }
-  //     }(),
-  //     style: TextStyle(
-  //       fontSize: 36.0,
-  //       fontWeight: FontWeight.bold,
-  //       color: Colors.white,
-  //       decoration: TextDecoration.underline,
-  //     ),
-  //   );
-  // }
 
   Widget _box(AdminTurnController controller) {
     return Obx(() {
@@ -118,7 +94,9 @@ class _AdminTurnPageState extends State<AdminTurnPage> {
           child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.red)),
         );
       } else if (controller.userNumber.value < 1) {
-        return Center(child: Text('No hay clientes para avisar', style: TextStyle(fontSize: 24.0)));
+        return Center(
+          child: Text('No hay clientes para avisar', style: TextStyle(fontSize: 24.0)),
+        );
       } else {
         return _showInfo(controller);
       }
@@ -126,26 +104,36 @@ class _AdminTurnPageState extends State<AdminTurnPage> {
   }
 
   Widget _showInfo(AdminTurnController controller) {
-    return Container(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          _turnInfo(controller),
-          Container(
-            padding: EdgeInsets.all(30.0),
-            child: SizedBox(
-              height: 30.0,
-              width: 300.0,
-              child: Divider(
-                color: Colors.green,
-                thickness: 4.0,
-              ),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        _turnInfo(controller),
+        Container(
+          padding: EdgeInsets.all(20.0),
+          child: SizedBox(
+            height: 30.0,
+            width: 300.0,
+            child: Divider(
+              color: Colors.green,
+              thickness: 4.0,
             ),
           ),
-          _nextTurnButton(controller),
-        ],
-      ),
+        ),
+        _turnButtons(controller),
+        Container(
+          padding: EdgeInsets.all(10.0),
+          child: SizedBox(
+            height: 30.0,
+            width: 100.0,
+            child: Divider(
+              color: Colors.green,
+              thickness: 4.0,
+            ),
+          ),
+        ),
+        _turnTimes()
+      ],
     );
   }
 
@@ -160,15 +148,18 @@ class _AdminTurnPageState extends State<AdminTurnPage> {
             color: Colors.green,
             elevation: 5,
             child: Padding(
-              padding: EdgeInsets.all(20.0),
+              padding: EdgeInsets.all(15),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.campaign_rounded, size: 80.0),
+                  Icon(Icons.campaign_rounded, size: 54.0),
                   Text(
                     controller.userNumber.value.toString(),
-                    style: TextStyle(fontSize: 42.0, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 36.0, fontWeight: FontWeight.bold),
                   ),
+                  SizedBox(height: 5),
+                  Text('Siguiente'),
+                  Text('número'),
                 ],
               ),
             ),
@@ -179,15 +170,18 @@ class _AdminTurnPageState extends State<AdminTurnPage> {
             color: Colors.green,
             elevation: 5,
             child: Padding(
-              padding: EdgeInsets.all(20.0),
+              padding: EdgeInsets.all(15),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.people, size: 80.0),
+                  Icon(Icons.people, size: 54.0),
                   Text(
                     '${controller.allUsers.value.toString()}',
-                    style: TextStyle(fontSize: 42.0, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 36.0, fontWeight: FontWeight.bold),
                   ),
+                  SizedBox(height: 5),
+                  Text('Clientes'),
+                  Text('por atender')
                 ],
               ),
             ),
@@ -197,46 +191,184 @@ class _AdminTurnPageState extends State<AdminTurnPage> {
     );
   }
 
-  Widget _nextTurnButton(AdminTurnController controller) {
+  Widget _turnButtons(AdminTurnController controller) {
     return Padding(
-      padding: EdgeInsets.only(right: 20.0, left: 20.0),
-      child: InkWell(
-        onTap: () {
-          if (_counterSec > 0) {
-            _timer.cancel();
-          } else if (_counterMin > 0) {
-            _timer.cancel();
-          }
-          TurnProvider().nextTurn();
-          _startTimer();
-        },
-        child: Container(
-          margin: EdgeInsets.symmetric(vertical: 10.0),
-          padding: EdgeInsets.symmetric(vertical: 30.0),
-          decoration: BoxDecoration(
-            color: Colors.redAccent[200],
-            borderRadius: BorderRadius.circular(40.0),
-            boxShadow: <BoxShadow>[
-              BoxShadow(
-                color: Colors.black26,
-                blurRadius: 3.0,
-                offset: Offset(0.5, 1.5),
-                spreadRadius: 3.0,
-              ),
+        padding: EdgeInsets.symmetric(horizontal: 20.0),
+        child: Column(children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              _callNextClientButton(controller),
+              SizedBox(width: 20),
+              _cancelNextTurnButton(),
             ],
           ),
-          child: Center(
-            child: FittedBox(
-              child: Text(
-                'Siguiente turno',
-                textAlign: TextAlign.center,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 36.0, color: Colors.white),
+          SizedBox(height: 20),
+          if (_counter > 0)
+            InkWell(
+              onTap: () {
+                TurnProvider().finishTurnAndUpdate(_timeUnix, _counter);
+                setState(() {
+                  _counter = 0;
+                  _counterSec = 0;
+                  _counterMin = 0;
+                  _timer.cancel();
+                });
+              },
+              child: SizedBox(
+                width: 260,
+                child: Container(
+                  padding: EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: Colors.green[400],
+                    borderRadius: BorderRadius.circular(20.0),
+                    boxShadow: <BoxShadow>[
+                      BoxShadow(
+                        color: Colors.black26,
+                        blurRadius: 3.0,
+                        offset: Offset(0.5, 1.5),
+                        spreadRadius: 3.0,
+                      ),
+                    ],
+                  ),
+                  child: Center(
+                    child: FittedBox(
+                      child: Text(
+                        'Terminar turno',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 24.0, color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ),
               ),
+            )
+        ]));
+  }
+
+  Widget _callNextClientButton(AdminTurnController controller) {
+    return InkWell(
+      onTap: () async {
+        if (_counter == 0) {
+          _timeUnix = await TurnProvider().nextTurn(true);
+          _startTimer();
+        } else {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) => AlertDialog(title: Text('Error'),
+              content: Text('Para atender a otro cliente, antes debes terminar el turno'),
+            ),
+          );
+        }
+      },
+      child: _textButton('Siguiente \n turno', Colors.green),
+    );
+  }
+
+  Widget _cancelNextTurnButton() {
+    return InkWell(
+      onTap: () {
+        if (_counter == 0) {
+          TurnProvider().nextTurn(false);
+          _startTimer();
+        } else {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) => AlertDialog(title: Text('Error'),
+              content: Text('Para pasar de cliente, antes debes terminar el turno'),
+            ),
+          );
+        }
+      } ,
+      child: _textButton('Saltar \n turno', Colors.red[300]),
+    );
+  }
+
+  Widget _textButton(String text, Color color) {
+    return SizedBox(
+      width: 120,
+      height: 80,
+      child: Container(
+        padding: EdgeInsets.all(15),
+        decoration: BoxDecoration(
+          color: color,
+          borderRadius: BorderRadius.circular(20.0),
+          boxShadow: <BoxShadow>[
+            BoxShadow(
+              color: Colors.black26,
+              blurRadius: 3.0,
+              offset: Offset(0.5, 1.5),
+              spreadRadius: 3.0,
+            ),
+          ],
+        ),
+        child: Center(
+          child: FittedBox(
+            child: Text(
+              text,
+              textAlign: TextAlign.center,
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24.0, color: Colors.white),
             ),
           ),
         ),
       ),
+    );
+  }
+
+  Widget _turnTimes() {
+    return Column(
+      children: [
+        _rowWaitTime('Tiempo medio de espera: ', 10),
+        _rowServiceTime('Tiempo medio de atención: ', 10)
+      ],
+    );
+  }
+
+  Widget _rowWaitTime(String text, int averageSize) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Text(text),
+        FutureBuilder(
+          future: TurnProvider().waitTurnTime(averageSize),
+          builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+            if (!snapshot.hasData || snapshot.data == '') {
+              return Text('-', style: TextStyle(fontWeight: FontWeight.bold));
+            } else {
+              return Text(
+                '${snapshot.data} min.',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              );
+            }
+          },
+        )
+      ],
+    );
+  }
+
+  Widget _rowServiceTime(String text, int averageSize) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Text(text),
+        FutureBuilder(
+          future: TurnProvider().serviceTurnTime(averageSize),
+          builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+            if (!snapshot.hasData || snapshot.data == '') {
+              return Text('-', style: TextStyle(fontWeight: FontWeight.bold));
+            } else {
+              return Text(
+                '${snapshot.data} min.',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              );
+            }
+          },
+        )
+      ],
     );
   }
 
