@@ -77,6 +77,7 @@ class _UserTurnPageState extends State<UserTurnPage> {
 
   Widget _turnInfoCharcuteria(TurnUserInfoController controller, String service) {
     return Obx(() {
+      print(controller.turnUserInfoCharcuteria.length);
       if (controller.numUsersCharcuteria.value < 0) {
         return Center(
           child: Center(
@@ -119,7 +120,7 @@ class _UserTurnPageState extends State<UserTurnPage> {
     });
   }
 
-  Widget _cardInfo(String service, String turnUser, String numUSers) {
+  Widget _cardInfo(String service, String turnUser, String numUsers) {
     return Container(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -169,8 +170,9 @@ class _UserTurnPageState extends State<UserTurnPage> {
                           children: [
                             _turnInfoText(
                                 Icons.confirmation_num_outlined, 'Turno: $turnUser', 20.0),
-                            _turnInfoText(Icons.people, 'Clientes por delante: $numUSers', 16.0),
-                            _turnInfoText(Icons.access_time, 'Tiempo de espera: -', 16.0),
+                            _turnInfoText(Icons.people, 'Clientes por delante: $numUsers', 16.0),
+                            _turnInfoWaitTime(
+                                Icons.access_time, 'Tiempo de espera: ', 16.0, service, numUsers),
                             //_turnInfoText(null, '15 min aprox.', 16.0),
                           ],
                         ),
@@ -197,6 +199,34 @@ class _UserTurnPageState extends State<UserTurnPage> {
           infoText,
           style: TextStyle(fontSize: fontSize, fontWeight: FontWeight.bold),
         ),
+      ],
+    );
+  }
+
+  Widget _turnInfoWaitTime(
+      IconData showIcon, String infoText, double fontSize, String service, String numUsersAhead) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(showIcon),
+        SizedBox(width: 10),
+        Text(
+          infoText,
+          style: TextStyle(fontSize: fontSize, fontWeight: FontWeight.bold),
+        ),
+        FutureBuilder(
+          future: TurnProvider().waitTurnTime(15, service),
+          builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+            if (!snapshot.hasData || snapshot.data == '') {
+              return Text('-', style: TextStyle(fontWeight: FontWeight.bold));
+            } else {
+              return Text(
+                '${int.parse(snapshot.data) * int.parse(numUsersAhead)} min.',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              );
+            }
+          },
+        )
       ],
     );
   }
@@ -246,14 +276,12 @@ class _UserTurnPageState extends State<UserTurnPage> {
           onTap: () {
             if (service == 'carniceria') {
               TurnProvider().createTurn(_marketId, 'carniceria');
-              Get.toNamed('userTurn');
             } else if (service == 'charcuteria') {
               TurnProvider().createTurn(_marketId, 'charcuteria');
-              Get.toNamed('userTurn');
             } else if (service == 'pescaderia') {
               TurnProvider().createTurn(_marketId, 'pescaderia');
-              Get.toNamed('userTurn');
             }
+            Get.offNamed('userTurn');
           },
           child: Container(
             padding: EdgeInsets.all(25.0),

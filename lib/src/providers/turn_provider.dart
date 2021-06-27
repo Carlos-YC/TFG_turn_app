@@ -189,13 +189,22 @@ class TurnProvider {
     await _refDB.child('$key').update({'fecha_finalizacion': seconds});
   }
 
-  Future<String> waitTurnTime(int queue) async {
+  Future<String> waitTurnTime(int queue, service) async {
     String _averageTimeTransform = '';
-    var _refDB = _dbReference
-        .child(this._marketId)
-        .child('cola_espera')
-        .child('tiempos_espera')
-        .child(this._adminService);
+    var _refDB;
+    if (service != '') {
+      _refDB = _dbReference
+          .child(this._marketId)
+          .child('cola_espera')
+          .child('tiempos_espera')
+          .child(service);
+    } else {
+      _refDB = _dbReference
+          .child(this._marketId)
+          .child('cola_espera')
+          .child('tiempos_espera')
+          .child(this._adminService);
+    }
 
     final _historyClientsTimes = await _refDB.orderByKey().limitToLast(queue).once();
     if (_historyClientsTimes.value != null) {

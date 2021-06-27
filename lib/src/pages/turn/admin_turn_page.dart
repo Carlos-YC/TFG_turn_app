@@ -333,7 +333,7 @@ class _AdminTurnPageState extends State<AdminTurnPage> {
       children: [
         Text(text),
         FutureBuilder(
-          future: TurnProvider().waitTurnTime(averageSize),
+          future: TurnProvider().waitTurnTime(averageSize, ''),
           builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
             if (!snapshot.hasData || snapshot.data == '') {
               return Text('-', style: TextStyle(fontWeight: FontWeight.bold));

@@ -24,14 +24,17 @@ class UserSelectSupermarket extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Center(
-                  child: Image.asset('assets/icons/icon1.png', width: 200, height: 300),
+                  child: Image.asset('assets/icons/icon2.png', width: 350, height: 400),
                 ),
-                SizedBox(height: 30),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(shape: CircleBorder()),
-                  child: Padding(
-                    padding: EdgeInsets.all(15),
-                    child: Icon(Icons.qr_code, size: 42),
+                SizedBox(height: 40),
+                ElevatedButton.icon(
+                  label: Text(
+                    'Escanear el supermercado \n en el que te encuentras',
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  icon: Icon(Icons.qr_code, size: 42),
+                  style: ElevatedButton.styleFrom(
+                    padding: EdgeInsets.all(10),
                   ),
                   onPressed: () => _readQR('userTurn'),
                 ),
@@ -40,14 +43,11 @@ class UserSelectSupermarket extends StatelessWidget {
             Positioned(
               child: Align(
                 alignment: FractionalOffset.bottomCenter,
-                child: ElevatedButton(
+                child: ElevatedButton.icon(
+                  label: Text('Cerrar sesión', style: TextStyle(fontSize: 16)),
+                  icon: Icon(Icons.logout, size: 16),
                   style: ElevatedButton.styleFrom(
                     primary: Colors.red,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50.0)),
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.all(10),
-                    child: Text('Cerrar sesión', style: TextStyle(fontSize: 16)),
                   ),
                   onPressed: () => UserProvider().logOut(context),
                 ),
