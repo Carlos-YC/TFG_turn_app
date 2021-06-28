@@ -68,7 +68,7 @@ class SelectServiceTurnPage extends StatelessWidget {
   Widget _boxButton(String text) {
     return Center(
       child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 40.0),
+        padding: EdgeInsets.symmetric(vertical: 15, horizontal: 40.0),
         child: InkWell(
           onTap: () {
             if (text == 'carniceria') {
@@ -83,7 +83,7 @@ class SelectServiceTurnPage extends StatelessWidget {
             }
           },
           child: Container(
-            padding: EdgeInsets.all(25.0),
+            padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 50),
             decoration: BoxDecoration(
               color: () {
                 if (text == 'carniceria') {
@@ -104,21 +104,38 @@ class SelectServiceTurnPage extends StatelessWidget {
                 )
               ],
             ),
-            child: Center(
-              child: Image(
-                height: 80,
-                image: AssetImage(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Image(
+                  height: 80,
+                  image: AssetImage(
+                    () {
+                      if (text == 'carniceria') {
+                        return 'assets/images/meat.png';
+                      } else if (text == 'charcuteria') {
+                        return 'assets/images/jammed.png';
+                      } else if (text == 'pescaderia') {
+                        return 'assets/images/fish.png';
+                      }
+                    }(),
+                  ),
+                ),
+                SizedBox(height: 2),
+                Text(
                   () {
                     if (text == 'carniceria') {
-                      return 'assets/images/meat.png';
+                      return 'Carnicería';
                     } else if (text == 'charcuteria') {
-                      return 'assets/images/cheese.png';
+                      return 'Charcutería';
                     } else if (text == 'pescaderia') {
-                      return 'assets/images/fish.png';
+                      return 'Pescadería';
                     }
                   }(),
-                ),
-              ),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                )
+              ],
             ),
           ),
         ),

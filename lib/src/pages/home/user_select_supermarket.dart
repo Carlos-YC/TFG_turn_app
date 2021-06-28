@@ -18,42 +18,50 @@ class UserSelectSupermarket extends StatelessWidget {
             end: Alignment.bottomCenter,
           ),
         ),
-        child: Stack(
-          children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+        child: SafeArea(
+          child: Padding(
+            padding: EdgeInsets.only(right: 5, left: 5, bottom: 5),
+            child: Stack(
               children: [
-                Center(
-                  child: Image.asset('assets/icons/icon2.png', width: 350, height: 400),
+                Positioned(
+                  child: Align(
+                    alignment: FractionalOffset.topRight,
+                    child: ElevatedButton.icon(
+                      label: Text('Cerrar sesión', style: TextStyle(fontSize: 16)),
+                      icon: Icon(Icons.logout, size: 16),
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.red,
+                      ),
+                      onPressed: () => UserProvider().logOut(context),
+                    ),
+                  ),
                 ),
-                SizedBox(height: 40),
-                ElevatedButton.icon(
-                  label: Text(
-                    'Escanear el supermercado \n en el que te encuentras',
-                    style: TextStyle(fontSize: 16),
+                Center(
+                  child: GestureDetector(
+                    child: Image.asset('assets/icons/icon2.png'),
+                    onTap: () => _readQR('userTurn'),
                   ),
-                  icon: Icon(Icons.qr_code, size: 42),
-                  style: ElevatedButton.styleFrom(
-                    padding: EdgeInsets.all(10),
+                ),
+                Positioned(
+                  child: Align(
+                    alignment: FractionalOffset.bottomCenter,
+                    child: Container(
+                      padding: EdgeInsets.all(15),
+                      decoration: BoxDecoration(
+                        color: Colors.blue[300],
+                        borderRadius: BorderRadius.circular(15)
+                      ),
+                      child: Text(
+                        'Pulsar el ticket para \n escanear el QR',
+                        style: TextStyle(fontSize: 18),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
                   ),
-                  onPressed: () => _readQR('userTurn'),
                 ),
               ],
             ),
-            Positioned(
-              child: Align(
-                alignment: FractionalOffset.bottomCenter,
-                child: ElevatedButton.icon(
-                  label: Text('Cerrar sesión', style: TextStyle(fontSize: 16)),
-                  icon: Icon(Icons.logout, size: 16),
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors.red,
-                  ),
-                  onPressed: () => UserProvider().logOut(context),
-                ),
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );

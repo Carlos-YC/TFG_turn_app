@@ -146,7 +146,15 @@ class _UserTurnPageState extends State<UserTurnPage> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        'Turno de $service',
+                        () {
+                          if (service == 'carniceria') {
+                            return 'Carnicería';
+                          } else if (service == 'charcuteria') {
+                            return 'Charcutería';
+                          } else if (service == 'pescaderia') {
+                            return 'Pescadería';
+                          }
+                        }(),
                         style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
                       ),
                       SizedBox(
@@ -166,14 +174,30 @@ class _UserTurnPageState extends State<UserTurnPage> {
                         ),
                       ),
                       Container(
-                        child: Column(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            _turnInfoText(
-                                Icons.confirmation_num_outlined, 'Turno: $turnUser', 20.0),
-                            _turnInfoText(Icons.people, 'Clientes por delante: $numUsers', 16.0),
-                            _turnInfoWaitTime(
-                                Icons.access_time, 'Tiempo de espera: ', 16.0, service, numUsers),
-                            //_turnInfoText(null, '15 min aprox.', 16.0),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Icon(Icons.confirmation_num_outlined, size: 32),
+                                Text(
+                                  turnUser,
+                                  style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
+                                )
+                              ],
+                            ),
+                            SizedBox(width: 17),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                _turnInfoText(Icons.people, 'Clientes por delante: ', numUsers),
+                                _turnInfoWaitTime(
+                                    Icons.access_time, 'Tiempo de espera: ', service, numUsers),
+                              ],
+                            ),
                           ],
                         ),
                       ),
@@ -189,30 +213,35 @@ class _UserTurnPageState extends State<UserTurnPage> {
     );
   }
 
-  Widget _turnInfoText(IconData showIcon, String infoText, double fontSize) {
+  Widget _turnInfoText(IconData showIcon, String text, String value) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Icon(showIcon),
-        SizedBox(width: 10),
-        Text(
-          infoText,
-          style: TextStyle(fontSize: fontSize, fontWeight: FontWeight.bold),
+        SizedBox(width: 5),
+        RichText(
+          text: TextSpan(
+            style: TextStyle(color: Colors.black),
+            children: [
+              TextSpan(text: text, style: TextStyle(fontSize: 16)),
+              TextSpan(text: value, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18))
+            ],
+          ),
         ),
       ],
     );
   }
 
   Widget _turnInfoWaitTime(
-      IconData showIcon, String infoText, double fontSize, String service, String numUsersAhead) {
+      IconData showIcon, String infoText, String service, String numUsersAhead) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Icon(showIcon),
-        SizedBox(width: 10),
+        SizedBox(width: 5),
         Text(
           infoText,
-          style: TextStyle(fontSize: fontSize, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 16),
         ),
         FutureBuilder(
           future: TurnProvider().waitTurnTime(15, service),
@@ -220,9 +249,16 @@ class _UserTurnPageState extends State<UserTurnPage> {
             if (!snapshot.hasData || snapshot.data == '') {
               return Text('-', style: TextStyle(fontWeight: FontWeight.bold));
             } else {
-              return Text(
-                '${int.parse(snapshot.data) * int.parse(numUsersAhead)} min.',
-                style: TextStyle(fontWeight: FontWeight.bold),
+              return RichText(
+                text: TextSpan(
+                  style: TextStyle(color: Colors.black),
+                  children: [
+                    TextSpan(
+                        text: '${int.parse(snapshot.data) * int.parse(numUsersAhead)}',
+                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                    TextSpan(text: ' min.', style: TextStyle(fontSize: 16))
+                  ],
+                ),
               );
             }
           },

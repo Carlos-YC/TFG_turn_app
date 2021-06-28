@@ -78,7 +78,7 @@ class _AdminTurnPageState extends State<AdminTurnPage> {
         ),
         body: Container(
           child: Padding(
-            padding: EdgeInsets.only(bottom: 30, left: 15, right: 15),
+            padding: EdgeInsets.only(top: 15, bottom: 65, left: 15, right: 15),
             child: _box(controller),
           ),
         ),
@@ -105,12 +105,12 @@ class _AdminTurnPageState extends State<AdminTurnPage> {
 
   Widget _showInfo(AdminTurnController controller) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         _turnInfo(controller),
         Container(
-          padding: EdgeInsets.all(20.0),
+          padding: EdgeInsets.all(10.0),
           child: SizedBox(
             height: 30.0,
             width: 300.0,
@@ -124,7 +124,7 @@ class _AdminTurnPageState extends State<AdminTurnPage> {
         Container(
           padding: EdgeInsets.all(10.0),
           child: SizedBox(
-            height: 30.0,
+            height: 20.0,
             width: 100.0,
             child: Divider(
               color: Colors.green,
@@ -141,6 +141,7 @@ class _AdminTurnPageState extends State<AdminTurnPage> {
     return Container(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Card(
             margin: EdgeInsets.only(left: 20.0, right: 20.0),
@@ -152,14 +153,17 @@ class _AdminTurnPageState extends State<AdminTurnPage> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.campaign_rounded, size: 54.0),
+                  Icon(Icons.campaign_rounded, size: 58.0),
                   Text(
                     controller.userNumber.value.toString(),
-                    style: TextStyle(fontSize: 36.0, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 42.0, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 5),
-                  Text('Siguiente'),
-                  Text('número'),
+                  Text(
+                    'Siguiente \n número',
+                    style: TextStyle(fontSize: 18),
+                    textAlign: TextAlign.center,
+                  ),
                 ],
               ),
             ),
@@ -174,14 +178,17 @@ class _AdminTurnPageState extends State<AdminTurnPage> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.people, size: 54.0),
+                  Icon(Icons.people, size: 58.0),
                   Text(
                     '${controller.allUsers.value.toString()}',
-                    style: TextStyle(fontSize: 36.0, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 42.0, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 5),
-                  Text('Clientes'),
-                  Text('por atender')
+                  Text(
+                    'Clientes \n por atender',
+                    style: TextStyle(fontSize: 18),
+                    textAlign: TextAlign.center,
+                  ),
                 ],
               ),
             ),
@@ -193,8 +200,9 @@ class _AdminTurnPageState extends State<AdminTurnPage> {
 
   Widget _turnButtons(AdminTurnController controller) {
     return Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20.0),
-        child: Column(children: [
+      padding: EdgeInsets.symmetric(horizontal: 10.0),
+      child: Column(
+        children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -204,48 +212,52 @@ class _AdminTurnPageState extends State<AdminTurnPage> {
               _cancelNextTurnButton(),
             ],
           ),
-          SizedBox(height: 20),
           if (_counter > 0)
-            InkWell(
-              onTap: () {
-                TurnProvider().finishTurnAndUpdate(_timeUnix, _counter);
-                setState(() {
-                  _counter = 0;
-                  _counterSec = 0;
-                  _counterMin = 0;
-                  _timer.cancel();
-                });
-              },
-              child: SizedBox(
-                width: 260,
-                child: Container(
-                  padding: EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: Colors.green[400],
-                    borderRadius: BorderRadius.circular(20.0),
-                    boxShadow: <BoxShadow>[
-                      BoxShadow(
-                        color: Colors.black26,
-                        blurRadius: 3.0,
-                        offset: Offset(0.5, 1.5),
-                        spreadRadius: 3.0,
-                      ),
-                    ],
-                  ),
-                  child: Center(
-                    child: FittedBox(
-                      child: Text(
-                        'Terminar turno',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 24.0, color: Colors.white),
+            Padding(
+              padding: EdgeInsets.only(top: 20),
+              child: InkWell(
+                onTap: () {
+                  TurnProvider().finishTurnAndUpdate(_timeUnix, _counter);
+                  setState(() {
+                    _counter = 0;
+                    _counterSec = 0;
+                    _counterMin = 0;
+                    _timer.cancel();
+                  });
+                },
+                child: SizedBox(
+                  width: 260,
+                  child: Container(
+                    padding: EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: Colors.green[400],
+                      borderRadius: BorderRadius.circular(20.0),
+                      boxShadow: <BoxShadow>[
+                        BoxShadow(
+                          color: Colors.black26,
+                          blurRadius: 3.0,
+                          offset: Offset(0.5, 1.5),
+                          spreadRadius: 3.0,
+                        ),
+                      ],
+                    ),
+                    child: Center(
+                      child: FittedBox(
+                        child: Text(
+                          'Terminar turno',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 24.0, color: Colors.white),
+                        ),
                       ),
                     ),
                   ),
                 ),
               ),
             )
-        ]));
+        ],
+      ),
+    );
   }
 
   Widget _callNextClientButton(AdminTurnController controller) {
@@ -257,7 +269,8 @@ class _AdminTurnPageState extends State<AdminTurnPage> {
         } else {
           showDialog(
             context: context,
-            builder: (BuildContext context) => AlertDialog(title: Text('Error'),
+            builder: (BuildContext context) => AlertDialog(
+              title: Text('Error'),
               content: Text('Para atender a otro cliente, antes debes terminar el turno'),
             ),
           );
@@ -272,16 +285,16 @@ class _AdminTurnPageState extends State<AdminTurnPage> {
       onTap: () {
         if (_counter == 0) {
           TurnProvider().nextTurn(false);
-          _startTimer();
         } else {
           showDialog(
             context: context,
-            builder: (BuildContext context) => AlertDialog(title: Text('Error'),
+            builder: (BuildContext context) => AlertDialog(
+              title: Text('Error'),
               content: Text('Para pasar de cliente, antes debes terminar el turno'),
             ),
           );
         }
-      } ,
+      },
       child: _textButton('Saltar \n turno', Colors.red[300]),
     );
   }
@@ -331,7 +344,7 @@ class _AdminTurnPageState extends State<AdminTurnPage> {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text(text),
+        Text(text, style: TextStyle(fontSize: 18)),
         FutureBuilder(
           future: TurnProvider().waitTurnTime(averageSize, ''),
           builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
@@ -340,7 +353,7 @@ class _AdminTurnPageState extends State<AdminTurnPage> {
             } else {
               return Text(
                 '${snapshot.data} min.',
-                style: TextStyle(fontWeight: FontWeight.bold),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
               );
             }
           },
@@ -354,7 +367,7 @@ class _AdminTurnPageState extends State<AdminTurnPage> {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text(text),
+        Text(text, style: TextStyle(fontSize: 18)),
         FutureBuilder(
           future: TurnProvider().serviceTurnTime(averageSize),
           builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
@@ -363,7 +376,7 @@ class _AdminTurnPageState extends State<AdminTurnPage> {
             } else {
               return Text(
                 '${snapshot.data} min.',
-                style: TextStyle(fontWeight: FontWeight.bold),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
               );
             }
           },
