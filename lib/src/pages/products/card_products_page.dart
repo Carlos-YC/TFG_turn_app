@@ -11,7 +11,7 @@ class ProductsPage extends StatefulWidget {
 }
 
 class _ProductsPageState extends State<ProductsPage> {
-  Future<List<ProductModel>> _future = ProductProvider().productList();
+  Future<List<ProductModel>> _future = ProductProvider().productListAll();
   String _selectedOption = 'Ver todo';
   List<String> _productsOptions = [
     'Ver todo',
@@ -61,19 +61,19 @@ class _ProductsPageState extends State<ProductsPage> {
           _selectedOption = opt;
           switch (opt) {
             case 'Ver todo':
-              _future = ProductProvider().productList();
+              _future = ProductProvider().productListAll();
               break;
             case 'Carniceria':
-              _future = ProductProvider().productListCarniceria();
+              _future = ProductProvider().productList('carniceria');
               break;
             case 'Charcuteria':
-              _future = ProductProvider().productListCharcuteria();
+              _future = ProductProvider().productList('charcuteria');
               break;
             case 'Pescaderia':
-              _future = ProductProvider().productListPescaderia();
+              _future = ProductProvider().productList('pescaderia');
               break;
             case 'Descuentos':
-              _future = ProductProvider().productListOffers();
+              _future = ProductProvider().productListAllOffers();
               break;
           }
         });
