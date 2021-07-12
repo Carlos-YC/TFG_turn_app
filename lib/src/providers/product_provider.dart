@@ -14,30 +14,23 @@ class ProductProvider {
     this._productsList = [];
   }
 
-  Future<List<ProductModel>> productList() async {
-    final _productsDB =
-        FirebaseDatabase.instance.reference().child(_supermarketID).child('productos');
+  Future<List<ProductModel>> productListAll() async {
     this._productsList.clear();
 
-    final responseCarniceria = await _productsDB.child('carniceria').once();
-    if (responseCarniceria.value != null) {
-      final _products = responseCarniceria.value;
-      _products.forEach((key, value) {
-        if (value['disponible']) this._productsList.add(ProductModel.fromJson(jsonEncode(value)));
-      });
-    }
+    await productList('carniceria');
+    await productList('charcuteria');
+    await productList('pescaderia');
 
-    final responseCharcuteria = await _productsDB.child('charcuteria').once();
-    if (responseCharcuteria.value != null) {
-      final _products = responseCharcuteria.value;
-      _products.forEach((key, value) {
-        if (value['disponible']) this._productsList.add(ProductModel.fromJson(jsonEncode(value)));
-      });
-    }
+    return this._productsList;
+  }
 
-    final responsePescaderia = await _productsDB.child('pescaderia').once();
-    if (responsePescaderia.value != null) {
-      final _products = responsePescaderia.value;
+  Future<List<ProductModel>> productList(String service) async {
+    final _productsDB =
+        FirebaseDatabase.instance.reference().child(_supermarketID).child('productos');
+
+    final response = await _productsDB.child(service).once();
+    if (response.value != null) {
+      final _products = response.value;
       _products.forEach((key, value) {
         if (value['disponible']) this._productsList.add(ProductModel.fromJson(jsonEncode(value)));
       });
@@ -46,80 +39,23 @@ class ProductProvider {
     return this._productsList;
   }
 
-  Future<List<ProductModel>> productListCarniceria() async {
-    final _productsDB =
-        FirebaseDatabase.instance.reference().child(_supermarketID).child('productos');
+  Future<List<ProductModel>> productListAllOffers() async {
     this._productsList.clear();
 
-    final responseCarniceria = await _productsDB.child('carniceria').once();
-    if (responseCarniceria.value != null) {
-      final _products = responseCarniceria.value;
-      _products.forEach((key, value) {
-        if (value['disponible']) this._productsList.add(ProductModel.fromJson(jsonEncode(value)));
-      });
-    }
+    await productListOffers('carniceria');
+    await productListOffers('charcuteria');
+    await productListOffers('pescaderia');
 
     return this._productsList;
   }
 
-  Future<List<ProductModel>> productListCharcuteria() async {
+  Future<List<ProductModel>> productListOffers(String service) async {
     final _productsDB =
-        FirebaseDatabase.instance.reference().child(_supermarketID).child('productos');
-    this._productsList.clear();
+    FirebaseDatabase.instance.reference().child(_supermarketID).child('productos');
 
-    final responseCharcuteria = await _productsDB.child('charcuteria').once();
-    if (responseCharcuteria.value != null) {
-      final _products = responseCharcuteria.value;
-      _products.forEach((key, value) {
-        if (value['disponible']) this._productsList.add(ProductModel.fromJson(jsonEncode(value)));
-      });
-    }
-
-    return this._productsList;
-  }
-
-  Future<List<ProductModel>> productListPescaderia() async {
-    final _productsDB =
-        FirebaseDatabase.instance.reference().child(_supermarketID).child('productos');
-    this._productsList.clear();
-
-    final responsePescaderia = await _productsDB.child('pescaderia').once();
-    if (responsePescaderia.value != null) {
-      final _products = responsePescaderia.value;
-      _products.forEach((key, value) {
-        if (value['disponible']) this._productsList.add(ProductModel.fromJson(jsonEncode(value)));
-      });
-    }
-
-    return this._productsList;
-  }
-
-  Future<List<ProductModel>> productListOffers() async {
-    final _productsDB =
-        FirebaseDatabase.instance.reference().child(_supermarketID).child('productos');
-    this._productsList.clear();
-
-    final responseCarniceria = await _productsDB.child('carniceria').once();
-    if (responseCarniceria.value != null) {
-      final _products = responseCarniceria.value;
-      _products.forEach((key, value) {
-        if (value['disponible'] && value['oferta'] && value['descuento'] > 0)
-          this._productsList.add(ProductModel.fromJson(jsonEncode(value)));
-      });
-    }
-
-    final responseCharcuteria = await _productsDB.child('charcuteria').once();
-    if (responseCharcuteria.value != null) {
-      final _products = responseCharcuteria.value;
-      _products.forEach((key, value) {
-        if (value['disponible'] && value['oferta'] && value['descuento'] > 0)
-          this._productsList.add(ProductModel.fromJson(jsonEncode(value)));
-      });
-    }
-
-    final responsePescaderia = await _productsDB.child('pescaderia').once();
-    if (responsePescaderia.value != null) {
-      final _products = responsePescaderia.value;
+    final response = await _productsDB.child(service).once();
+    if (response.value != null) {
+      final _products = response.value;
       _products.forEach((key, value) {
         if (value['disponible'] && value['oferta'] && value['descuento'] > 0)
           this._productsList.add(ProductModel.fromJson(jsonEncode(value)));
